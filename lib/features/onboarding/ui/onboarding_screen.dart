@@ -19,28 +19,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const _pages = <Map<String, String>>[
     {
-      'badge': 'SPIRITUAL ACCURACY',
+      'badge': 'JADWAL SALAT',
       'title': 'Adzan tepat waktu',
       'description':
-          'Stay connected to your prayers with precise notifications and a calm, elegant rhythm throughout the day.',
-      'emoji': '🕌',
-      'accent': 'Fajr • 04:32',
+          'Notifikasi yang lebih tenang dan fokus untuk membantu kamu menjaga ritme ibadah harian.',
+      'accent': 'Subuh • 04:32',
+      'panelTitle': 'Jadwal salat yang terarah',
+      'panelSubtitle':
+          'Pantau waktu salat, hitung mundur, dan pengingat adzan dari satu tempat.',
     },
     {
-      'badge': 'QURAN EXPERIENCE',
+      'badge': 'PENGALAMAN QURAN',
       'title': 'Baca Al-Qur\'an nyaman',
       'description':
-          'Experience a clean and distraction-free reading environment designed for reflection and consistency.',
-      'emoji': '📖',
-      'accent': 'Last read • Al-Kahf',
+          'Lingkungan baca yang bersih dan fokus agar murajaah, tafsir, dan audio terasa lebih nyaman.',
+      'accent': 'Bacaan terakhir • Al-Kahf',
+      'panelTitle': 'Reader yang tenang',
+      'panelSubtitle':
+          'Lanjutkan bacaan terakhir, simpan bookmark, dan dengarkan murottal saat dibutuhkan.',
     },
     {
-      'badge': 'QUIET REFLECTION',
+      'badge': 'REFLEKSI HARIAN',
       'title': 'Ibadah lebih terarah',
       'description':
-          'Everything you need for your spiritual journey in one focused, polished, and serene application.',
-      'emoji': '✨',
-      'accent': 'Ramadan • Crafted with intention',
+          'Satu aplikasi untuk salat, Al-Qur\'an, audio, dan pengaturan spiritual yang lebih rapi.',
+      'accent': 'Ramadan • Dirancang dengan niat baik',
+      'panelTitle': 'Satu ruang ibadah digital',
+      'panelSubtitle':
+          'Dirancang untuk menemani kebiasaan ibadah sehari-hari dengan tampilan yang lebih hangat.',
     },
   ];
 
@@ -62,10 +68,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     textSize: 24,
                   ),
                   TextButton(
-                    onPressed: () {
-                      authController.completeOnboarding();
-                    },
-                    child: const Text('Skip'),
+                    onPressed: authController.completeOnboarding,
+                    child: const Text('Lewati'),
                   ),
                 ],
               ),
@@ -81,8 +85,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       badge: page['badge']!,
                       title: page['title']!,
                       description: page['description']!,
-                      imageEmoji: page['emoji']!,
                       accentLabel: page['accent']!,
+                      panelTitle: page['panelTitle']!,
+                      panelSubtitle: page['panelSubtitle']!,
+                      icon: switch (index) {
+                        0 => Icons.schedule_rounded,
+                        1 => Icons.menu_book_rounded,
+                        _ => Icons.auto_awesome_rounded,
+                      },
+                      accentColor: switch (index) {
+                        0 => AppColors.primary,
+                        1 => AppColors.secondary,
+                        _ => AppColors.tertiary,
+                      },
                     );
                   },
                 ),

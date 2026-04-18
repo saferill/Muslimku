@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/dark_theme.dart';
@@ -48,19 +49,22 @@ class _MuslimkuAppState extends State<MuslimkuApp>
       child: AnimatedBuilder(
         animation: _dependencies.authController,
         builder: (context, _) {
-          final state = _dependencies.authController.state;
-          final themeMode = switch (state.themeModeName) {
-            'dark' => ThemeMode.dark,
-            'light' => ThemeMode.light,
-            _ => ThemeMode.system,
-          };
-
+          final locale =
+              _dependencies.authController.state.interfaceLanguage == 'English'
+                  ? const Locale('en')
+                  : const Locale('id');
           return MaterialApp(
             title: 'Muslimku',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.build(),
             darkTheme: DarkAppTheme.build(),
-            themeMode: themeMode,
+            themeMode: ThemeMode.light,
+            locale: locale,
+            supportedLocales: const <Locale>[
+              Locale('id'),
+              Locale('en'),
+            ],
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
             navigatorKey: appNavigatorKey,
             builder: (context, child) {
               return AppLockBoundary(

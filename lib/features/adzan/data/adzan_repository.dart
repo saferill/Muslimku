@@ -20,8 +20,18 @@ class AdzanRepository {
   }) {
     final location =
         locationOverride ?? PrayerLocationModel.byLabel(locationLabel);
-    final locationNow = nowUtc.add(
+    final shiftedLocationNow = nowUtc.add(
       Duration(minutes: (location.utcOffsetHours * 60).round()),
+    );
+    final locationNow = DateTime(
+      shiftedLocationNow.year,
+      shiftedLocationNow.month,
+      shiftedLocationNow.day,
+      shiftedLocationNow.hour,
+      shiftedLocationNow.minute,
+      shiftedLocationNow.second,
+      shiftedLocationNow.millisecond,
+      shiftedLocationNow.microsecond,
     );
     final prayers = _calculatePrayerTimes(
       location,

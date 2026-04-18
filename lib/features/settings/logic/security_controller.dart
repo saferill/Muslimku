@@ -106,7 +106,7 @@ class SecurityController extends ChangeNotifier {
       return false;
     }
     final success = await _localAuth.authenticate(
-      localizedReason: 'Unlock Muslimku',
+      localizedReason: 'Buka kunci Muslimku',
       options: const AuthenticationOptions(
         biometricOnly: true,
         stickyAuth: true,

@@ -118,6 +118,7 @@ class AudioController extends ChangeNotifier {
     await _service.setSpeed(_speed);
     await _service.setLoopMode(_repeatEnabled ? LoopMode.one : LoopMode.off);
     await _service.setShuffleModeEnabled(_shuffleEnabled);
+    await _service.warmup();
     _hydrated = true;
     notifyListeners();
   }
@@ -171,7 +172,7 @@ class AudioController extends ChangeNotifier {
         );
       }
     } catch (error) {
-      _error = error.toString();
+      _error = _friendlyAudioError(error);
     } finally {
       _loading = false;
       notifyListeners();
@@ -196,7 +197,7 @@ class AudioController extends ChangeNotifier {
         album: 'Muslimku Quran',
       );
     } catch (error) {
-      _error = error.toString();
+      _error = _friendlyAudioError(error);
     } finally {
       _loading = false;
       notifyListeners();
@@ -214,6 +215,7 @@ class AudioController extends ChangeNotifier {
     try {
       final previewed = await _notificationService.previewAdhanSound(
         soundRawResource: rawResource,
+        volume: 1.0,
       );
       if (!previewed) {
         if ((assetPath ?? '').isEmpty) {
@@ -226,7 +228,7 @@ class AudioController extends ChangeNotifier {
         );
       }
     } catch (error) {
-      _error = error.toString();
+      _error = _friendlyAudioError(error);
     } finally {
       _loading = false;
       notifyListeners();
@@ -273,7 +275,7 @@ class AudioController extends ChangeNotifier {
       await _persist();
       return '${surah.name} berhasil diunduh.';
     } catch (error) {
-      _error = error.toString();
+      _error = _friendlyAudioError(error);
       return _error;
     } finally {
       _downloadingKeys.remove(key);
@@ -326,7 +328,13 @@ class AudioController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggle() => _service.toggle();
+  Future<void> toggle() async {
+    if (!_service.hasSource) {
+      await playSurah(surahNumber: _currentSurahNumber);
+      return;
+    }
+    await _service.toggle();
+  }
 
   Future<void> stop() async {
     await _service.stop();
@@ -459,6 +467,20 @@ class AudioController extends ChangeNotifier {
       await directory.create(recursive: true);
     }
     return directory;
+  }
+
+  String _friendlyAudioError(Object error) {
+    final message = error.toString();
+    if (message.contains('has not been initialized')) {
+      return 'Pemutar audio belum siap. Coba buka ulang halaman audio.';
+    }
+    if (message.contains('Audio untuk qari ini belum tersedia.')) {
+      return 'Audio untuk qari ini belum tersedia. Coba pilih qari lain.';
+    }
+    if (message.contains('Source error')) {
+      return 'Sumber audio tidak bisa dimuat sekarang. Coba lagi sebentar.';
+    }
+    return message;
   }
 
   Future<void> _persist() async {

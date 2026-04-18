@@ -48,15 +48,10 @@ class RouteAwarePermissionScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const <Widget>[
                       MuslimkuBrand(
                         logoSize: 34,
                         textSize: 24,
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        child: Icon(Icons.person_outline, color: AppColors.primary),
                       ),
                     ],
                   ),
@@ -69,29 +64,29 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                             _PermissionMiniCard(
                               color: AppColors.primary,
                               icon: Icons.location_on_outlined,
-                              label: 'Location',
+                              label: 'Lokasi',
                             ),
                             SizedBox(width: 12),
                             _PermissionMiniCard(
                               color: AppColors.tertiary,
                               icon: Icons.notifications_active_outlined,
-                              label: 'Alerts',
+                              label: 'Notifikasi',
                             ),
                           ],
                         ),
                         const SizedBox(height: 24),
                         const Text(
-                          'Digital Sanctuary',
+                          'Siapkan pengalaman ibadahmu',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 30,
                             height: 1.12,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                         const SizedBox(height: 14),
                         const Text(
-                          'Untuk memberikan jadwal salat dan arah kiblat yang akurat, Muslimku memerlukan akses lokasi dan notifikasi.',
+                          'Agar jadwal salat, arah kiblat, dan pengingat adzan bekerja dengan akurat, Muslimku memerlukan akses lokasi dan notifikasi.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -126,12 +121,7 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         TextButton(
                           onPressed: authController.markPermissionsSeen,
-                          child: const Text('Nanti saja'),
-                        ),
-                        const SizedBox(height: 8),
-                        PrimaryButton(
-                          label: 'Lanjut',
-                          onPressed: authController.markPermissionsSeen,
+                          child: const Text('Lanjut tanpa izin dulu'),
                         ),
                       ],
                     ),

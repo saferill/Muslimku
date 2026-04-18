@@ -22,6 +22,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
@@ -76,6 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           label: 'Full Name',
                           hint: 'Abdullah Rahman',
                           icon: Icons.person_outline,
+                          textInputAction: TextInputAction.next,
                           validator: (value) =>
                               Validators.requiredField(value, 'Nama lengkap'),
                         ),
@@ -86,6 +89,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           hint: 'name@example.com',
                           icon: Icons.mail_outline,
                           keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           validator: Validators.email,
                         ),
                         const SizedBox(height: 18),
@@ -94,8 +98,21 @@ class _SignupScreenState extends State<SignupScreen> {
                           label: 'Password',
                           hint: 'Minimal 8 karakter',
                           icon: Icons.lock_outline,
-                          obscureText: true,
+                          obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.next,
                           validator: Validators.password,
+                          suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 18),
                         AppTextField(
@@ -103,7 +120,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           label: 'Confirm Password',
                           hint: 'Ulangi password',
                           icon: Icons.verified_user_outlined,
-                          obscureText: true,
+                          obscureText: _obscureConfirmPassword,
+                          textInputAction: TextInputAction.done,
                           validator: (value) {
                             final error = Validators.password(value);
                             if (error != null) return error;
@@ -112,6 +130,19 @@ class _SignupScreenState extends State<SignupScreen> {
                             }
                             return null;
                           },
+                          suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword;
+                              });
+                            },
+                            icon: Icon(
+                              _obscureConfirmPassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 20),
                         AuthButton(

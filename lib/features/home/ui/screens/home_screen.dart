@@ -61,7 +61,7 @@ class HomeScreen extends StatelessWidget {
             builder: (context, snapshot) {
               final nowUtc = snapshot.data ?? DateTime.now().toUtc();
               final prayerSnapshot = dependencies.adzanController.snapshotFor(
-                locationLabel: state.currentLocation,
+                locationLabel: dependencies.adzanController.locationLabel,
                 nowUtc: nowUtc,
               );
 

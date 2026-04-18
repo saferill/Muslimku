@@ -19,6 +19,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.inputFormatters,
     this.readOnly = false,
+    this.textInputAction,
   });
 
   final TextEditingController controller;
@@ -34,6 +35,7 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +59,17 @@ class AppTextField extends StatelessWidget {
           obscureText: obscureText,
           readOnly: readOnly,
           keyboardType: keyboardType,
+          textInputAction: textInputAction,
           validator: validator,
           maxLines: maxLines,
           maxLength: maxLength,
           onChanged: onChanged,
           inputFormatters: inputFormatters,
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: icon == null

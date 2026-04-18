@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../di/injection.dart';
 import '../../../../routes/route_names.dart';
+import '../../../audio/ui/screens/audio_screen.dart';
 
 class QuranScreen extends StatefulWidget {
   const QuranScreen({super.key});
@@ -45,6 +46,14 @@ class _QuranScreenState extends State<QuranScreen> {
                           letterSpacing: -0.8,
                         ),
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const AudioScreen(),
+                        ),
+                      ),
+                      icon: const Icon(Icons.headphones_rounded),
                     ),
                     IconButton(
                       onPressed: () =>
@@ -185,5 +194,3 @@ class _QuranScreenState extends State<QuranScreen> {
     );
   }
 }
-
-

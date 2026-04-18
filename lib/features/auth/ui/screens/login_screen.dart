@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _messageShown = false;
+  bool _obscurePassword = true;
 
   @override
   void didChangeDependencies() {
@@ -93,6 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hint: 'name@example.com / username',
                           icon: Icons.person_outline_rounded,
                           keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           validator: Validators.emailOrUsername,
                         ),
                         const SizedBox(height: 18),
@@ -101,8 +103,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           label: 'Password',
                           hint: 'Masukkan password',
                           icon: Icons.lock_outline,
-                          obscureText: true,
+                          obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.done,
                           validator: Validators.password,
+                          suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Align(

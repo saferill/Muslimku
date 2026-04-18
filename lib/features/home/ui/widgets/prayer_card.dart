@@ -47,7 +47,7 @@ class PrayerCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Text(
-                'NEXT PRAYER',
+                'SALAT BERIKUTNYA',
                 style: TextStyle(
                   color: Colors.white70,
                   fontWeight: FontWeight.w700,
@@ -88,7 +88,7 @@ class PrayerCard extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               const Text(
-                'Remaining time',
+                'Sisa waktu',
                 style: TextStyle(color: Colors.white70),
               ),
               const SizedBox(height: 6),

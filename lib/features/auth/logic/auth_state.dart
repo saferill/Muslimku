@@ -125,7 +125,7 @@ class AuthState {
     currentLocation: 'Jakarta, Indonesia',
     adzanAudio: AppConstants.defaultRegularAdzanSound,
     quranReciter: 'Misyari Rasyid Al-Afasi',
-    themeModeName: 'system',
+    themeModeName: 'light',
     interfaceLanguage: 'Bahasa Indonesia',
     translation: 'Indonesia (Kemenag RI)',
     readerShowTranslation: true,

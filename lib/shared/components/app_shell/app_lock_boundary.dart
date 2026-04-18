@@ -79,7 +79,7 @@ class _AppLockBoundaryState extends State<AppLockBoundary>
                           ),
                           const SizedBox(height: 20),
                           const Text(
-                            'Muslimku Locked',
+                            'Muslimku Terkunci',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.w900,
@@ -112,7 +112,7 @@ class _AppLockBoundaryState extends State<AppLockBoundary>
                             width: double.infinity,
                             child: FilledButton(
                               onPressed: () => _unlockWithPin(context),
-                              child: const Text('Unlock'),
+                              child: const Text('Buka Kunci'),
                             ),
                           ),
                           if (security.biometricsEnabled) ...<Widget>[
@@ -129,7 +129,7 @@ class _AppLockBoundaryState extends State<AppLockBoundary>
                                 }
                               },
                               icon: const Icon(Icons.fingerprint_rounded),
-                              label: const Text('Use Biometrics'),
+                              label: const Text('Gunakan Biometrik'),
                             ),
                           ],
                         ],

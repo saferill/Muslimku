@@ -150,12 +150,6 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () => _showLanguageSheet(context),
                     ),
                     SettingsTile(
-                      icon: Icons.contrast_rounded,
-                      title: 'Tema Tampilan',
-                      subtitle: _themeModeLabel(state.themeModeName),
-                      onTap: () => _showThemeSheet(context),
-                    ),
-                    SettingsTile(
                       icon: Icons.location_on_outlined,
                       title: 'Lokasi Salat Saat Ini',
                       subtitle: state.currentLocation,
@@ -247,6 +241,28 @@ class SettingsScreen extends StatelessWidget {
                               ? 'Biometric unlock aktif'
                               : 'Gunakan sidik jari atau wajah untuk membuka aplikasi')
                           : 'Biometrik belum tersedia di perangkat ini',
+                      onTap: () {
+                        if (!security.pinEnabled) {
+                          context.showAppSnack(
+                            'Atur PIN keamanan dulu sebelum mengaktifkan biometrik.',
+                          );
+                          return;
+                        }
+                        if (!security.biometricsAvailable) {
+                          context.showAppSnack(
+                            'Biometrik belum tersedia di perangkat ini.',
+                          );
+                          return;
+                        }
+                        security.setBiometricsEnabled(
+                          !security.biometricsEnabled,
+                        );
+                        context.showAppSnack(
+                          security.biometricsEnabled
+                              ? 'Biometrik diaktifkan.'
+                              : 'Biometrik dinonaktifkan.',
+                        );
+                      },
                       trailing: Switch.adaptive(
                         value: security.biometricsEnabled,
                         onChanged: security.pinEnabled &&
@@ -266,12 +282,16 @@ class SettingsScreen extends StatelessWidget {
                       icon: Icons.lock_clock_rounded,
                       title: 'Kunci Sekarang',
                       subtitle: 'Kunci aplikasi saat ini juga',
-                      onTap: security.pinEnabled
-                          ? () {
-                              security.lockNow();
-                              context.showAppSnack('Aplikasi dikunci.');
-                            }
-                          : null,
+                      onTap: () {
+                        if (!security.pinEnabled) {
+                          context.showAppSnack(
+                            'Atur PIN keamanan dulu untuk memakai fitur ini.',
+                          );
+                          return;
+                        }
+                        security.lockNow();
+                        context.showAppSnack('Aplikasi dikunci.');
+                      },
                     ),
                   ],
                 ),
@@ -477,41 +497,6 @@ class SettingsScreen extends StatelessWidget {
                     : null,
                 onTap: () {
                   settings.updateLanguage(language);
-                  Navigator.of(sheetContext).pop();
-                },
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _showThemeSheet(BuildContext context) async {
-    final dependencies = AppDependenciesScope.of(context);
-    final settings = dependencies.settingsController;
-    final current = settings.state.themeModeName;
-    const options = <String>['system', 'light', 'dark'];
-
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(24),
-            children: options.map((themeMode) {
-              final selected = themeMode == current;
-              return ListTile(
-                title: Text(_themeModeLabel(themeMode)),
-                trailing: selected
-                    ? const Icon(
-                        Icons.check_circle_rounded,
-                        color: AppColors.primary,
-                      )
-                    : null,
-                onTap: () {
-                  settings.updateThemeMode(themeMode);
                   Navigator.of(sheetContext).pop();
                 },
               );
@@ -787,17 +772,6 @@ Hasil aktual:
       },
     );
     return launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
-
-  String _themeModeLabel(String value) {
-    switch (value) {
-      case 'light':
-        return 'Terang';
-      case 'dark':
-        return 'Gelap';
-      default:
-        return 'Ikuti sistem';
-    }
   }
 }
 

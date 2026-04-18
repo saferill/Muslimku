@@ -103,7 +103,8 @@ class QuranController extends ChangeNotifier {
   }
 
   Future<void> search(String query) async {
-    if (query.trim().isEmpty) {
+    final normalized = query.trim();
+    if (normalized.isEmpty) {
       _searchResults = const <SearchResultModel>[];
       _searchError = null;
       notifyListeners();
@@ -113,10 +114,19 @@ class QuranController extends ChangeNotifier {
     _searchError = null;
     notifyListeners();
     try {
-      _searchResults = await _repository.search(query);
+      final remoteResults = await _repository.search(normalized);
+      if (remoteResults.isNotEmpty) {
+        _searchResults = remoteResults;
+      } else {
+        _searchResults = _fallbackSearch(normalized);
+      }
     } catch (error) {
-      _searchResults = const <SearchResultModel>[];
-      _searchError = error.toString();
+      _searchResults = _fallbackSearch(normalized);
+      if (_searchResults.isEmpty) {
+        _searchError = error.toString();
+      } else {
+        _searchError = null;
+      }
     } finally {
       _searching = false;
       notifyListeners();
@@ -175,5 +185,27 @@ class QuranController extends ChangeNotifier {
 
   String reciterIdForName(String name) {
     return AppConstants.quranReciterIds[name] ?? '05';
+  }
+
+  List<SearchResultModel> _fallbackSearch(String query) {
+    final normalized = query.toLowerCase();
+    return _surahs.where((surah) {
+      return surah.name.toLowerCase().contains(normalized) ||
+          surah.meaning.toLowerCase().contains(normalized) ||
+          surah.arabic.contains(query) ||
+          surah.number.toString() == normalized;
+    }).map((surah) {
+      return SearchResultModel(
+        type: 'surah',
+        score: 1,
+        relevance: 'Hasil dari daftar surah',
+        surahNumber: surah.number,
+        surahName: surah.name,
+        surahArabic: surah.arabic,
+        ayahNumber: 1,
+        translation: surah.meaning,
+        tafsirText: surah.description,
+      );
+    }).toList();
   }
 }

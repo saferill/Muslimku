@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -33,6 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     _speech.stop();
     super.dispose();
@@ -52,8 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return Scaffold(
       body: AnimatedBuilder(
-        animation:
-            Listenable.merge(<Listenable>[quranController, searchController]),
+        animation: Listenable.merge(<Listenable>[quranController, searchController]),
         builder: (context, _) {
           return SafeArea(
             child: ListView(
@@ -108,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: <Widget>[
                     const Expanded(
                       child: Text(
-                        'Pencarian Terbaru',
+                        'Pencarian terbaru',
                         style: TextStyle(
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.w800,
@@ -139,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Hasil Teratas',
+                  'Hasil pencarian',
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w800,
@@ -157,14 +158,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     child: Column(
                       children: <Widget>[
-                        Text(
-                          quranController.searchError!,
-                          style: const TextStyle(color: AppColors.error),
+                        const Text(
+                          'Pencarian online sedang bermasalah. Coba lagi atau gunakan kata kunci lain.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: AppColors.error),
                         ),
                         const SizedBox(height: 12),
                         FilledButton(
-                          onPressed: () =>
-                              quranController.search(_controller.text),
+                          onPressed: () => quranController.search(_controller.text),
                           child: const Text('Coba Lagi'),
                         ),
                       ],
@@ -187,10 +188,11 @@ class _SearchScreenState extends State<SearchScreen> {
                         borderRadius: BorderRadius.circular(24),
                         onTap: () async {
                           final surah = _findSurah(
-                              quranController.surahs(), result.surahNumber);
+                            quranController.surahs(),
+                            result.surahNumber,
+                          );
                           if (surah == null) return;
-                          await searchController
-                              .addRecentSearch(_controller.text);
+                          await searchController.addRecentSearch(_controller.text);
                           if (!context.mounted) return;
                           Navigator.of(context).pushNamed(
                             RouteNames.reader,
@@ -253,8 +255,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                 children: <Widget>[
                                   ActionChip(
                                     label: const Text('Buka'),
-                                    avatar: const Icon(Icons.menu_book_rounded,
-                                        size: 18),
+                                    avatar: const Icon(
+                                      Icons.menu_book_rounded,
+                                      size: 18,
+                                    ),
                                     onPressed: () async {
                                       final surah = _findSurah(
                                         quranController.surahs(),
@@ -273,8 +277,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                   ActionChip(
                                     label: const Text('Simpan'),
-                                    avatar: const Icon(Icons.bookmark_rounded,
-                                        size: 18),
+                                    avatar: const Icon(
+                                      Icons.bookmark_rounded,
+                                      size: 18,
+                                    ),
                                     onPressed: () => _bookmarkResult(
                                       quranController: quranController,
                                       result: result,
@@ -282,8 +288,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                   ActionChip(
                                     label: const Text('Bagikan'),
-                                    avatar: const Icon(Icons.share_rounded,
-                                        size: 18),
+                                    avatar: const Icon(
+                                      Icons.share_rounded,
+                                      size: 18,
+                                    ),
                                     onPressed: () => SharePlus.instance.share(
                                       ShareParams(
                                         text:
@@ -323,8 +331,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .where((entry) => entry.number == result.ayahNumber)
         .firstOrNull;
     if (ayah == null || !mounted) return;
-    final saved =
-        await quranController.toggleBookmark(surah: surah, ayah: ayah);
+    final saved = await quranController.toggleBookmark(surah: surah, ayah: ayah);
     if (!mounted) return;
     context.showAppSnack(saved ? 'Bookmark disimpan.' : 'Bookmark dihapus.');
   }
@@ -360,6 +367,3 @@ class _SearchScreenState extends State<SearchScreen> {
 extension _FirstOrNullExtension<T> on Iterable<T> {
   T? get firstOrNull => isEmpty ? null : first;
 }
-
-
-

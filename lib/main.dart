@@ -19,6 +19,18 @@ Future<void> main() async {
 }
 
 Future<void> _initializeCriticalServices() async {
+  if (!kIsWeb) {
+    try {
+      await JustAudioBackground.init(
+        androidNotificationChannelId: 'muslimku.audio',
+        androidNotificationChannelName: 'Muslimku Audio',
+        androidNotificationOngoing: true,
+      ).timeout(const Duration(seconds: 8));
+    } catch (error) {
+      debugPrint('JustAudioBackground init skipped: $error');
+    }
+  }
+
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     try {
       await Firebase.initializeApp().timeout(const Duration(seconds: 8));
@@ -29,16 +41,6 @@ Future<void> _initializeCriticalServices() async {
 }
 
 Future<void> _initializeDeferredServices() async {
-  try {
-    await JustAudioBackground.init(
-      androidNotificationChannelId: 'muslimku.audio',
-      androidNotificationChannelName: 'Muslimku Audio',
-      androidNotificationOngoing: true,
-    ).timeout(const Duration(seconds: 8));
-  } catch (error) {
-    debugPrint('JustAudioBackground init skipped: $error');
-  }
-
   try {
     await AuthService.ensureInitialized().timeout(const Duration(seconds: 8));
   } catch (error) {

@@ -94,7 +94,7 @@ class AuthController extends ChangeNotifier {
       ),
       quranReciter: _storage.getString(_quranReciterKey) ??
           AppConstants.quranReciters.first,
-      themeModeName: _storage.getString(_themeModeKey) ?? 'system',
+      themeModeName: _storage.getString(_themeModeKey) ?? 'light',
       interfaceLanguage: _storage.getString(_interfaceLanguageKey) ??
           AppConstants.interfaceLanguages.first,
       translation: _storage.getString(_translationKey) ??

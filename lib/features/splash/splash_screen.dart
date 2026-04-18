@@ -46,12 +46,12 @@ class SplashScreen extends StatelessWidget {
                   children: <Widget>[
                     const Spacer(),
                     Container(
-                      width: 178,
-                      height: 178,
-                      padding: const EdgeInsets.all(12),
+                      width: 214,
+                      height: 214,
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(48),
+                        borderRadius: BorderRadius.circular(56),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.12),
                         ),
@@ -64,9 +64,9 @@ class SplashScreen extends StatelessWidget {
                         ],
                       ),
                       child: const MuslimkuLogo(
-                        size: 154,
-                        padding: 8,
-                        radius: 36,
+                        size: 186,
+                        padding: 10,
+                        radius: 42,
                         backgroundColor: Colors.white,
                         borderColor: Colors.transparent,
                       ),
@@ -74,9 +74,9 @@ class SplashScreen extends StatelessWidget {
                     const SizedBox(height: 28),
                     const MuslimkuBrand(
                       center: true,
-                      logoSize: 42,
+                      logoSize: 46,
                       textColor: Colors.white,
-                      textSize: 38,
+                      textSize: 40,
                     ),
                     const SizedBox(height: 12),
                     Text(

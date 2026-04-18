@@ -92,6 +92,16 @@ class AuthService {
         firebaseUser: refreshed,
         data: profileDoc.data(),
       );
+      if (!profileDoc.exists) {
+        await _users.doc(refreshed.uid).set(
+          <String, dynamic>{
+            ...profile.toJson(),
+            'emailVerified': _isVerifiedUser(refreshed, profileDoc.data()),
+            'updatedAtEpochMs': DateTime.now().millisecondsSinceEpoch,
+          },
+          SetOptions(merge: true),
+        );
+      }
 
       if (!_isVerifiedUser(refreshed, profileDoc.data())) {
         return AuthActionResult(
@@ -169,6 +179,16 @@ class AuthService {
         firebaseUser: refreshed,
         data: profileDoc.data(),
       );
+      if (!profileDoc.exists) {
+        await _users.doc(refreshed.uid).set(
+          <String, dynamic>{
+            ...profile.toJson(),
+            'emailVerified': _isVerifiedUser(refreshed, profileDoc.data()),
+            'updatedAtEpochMs': DateTime.now().millisecondsSinceEpoch,
+          },
+          SetOptions(merge: true),
+        );
+      }
 
       if (!_isVerifiedUser(refreshed, profileDoc.data())) {
         try {
@@ -176,6 +196,7 @@ class AuthService {
         } catch (_) {
           // Surface the verification requirement even if resend fails.
         }
+        await _auth.signOut();
         return AuthActionResult(
           code: AuthResultCode.needsVerification,
           success: false,
@@ -267,11 +288,13 @@ class AuthService {
         },
         SetOptions(merge: true),
       );
+      await _auth.signOut();
 
       return AuthActionResult(
         code: AuthResultCode.needsVerification,
         success: false,
-        message: 'Akun dibuat. Buka email Anda lalu klik link verifikasi.',
+        message:
+            'Akun dibuat. Username kamu $username. Buka email Anda lalu klik link verifikasi sebelum Sign In.',
         user: profile,
         email: profile.email,
         username: profile.username,

@@ -28,16 +28,16 @@ class _MainShellState extends State<MainShell> {
         onOpenSearch: () => Navigator.of(context).push(
           MaterialPageRoute<void>(builder: (_) => const SearchScreen()),
         ),
-        onOpenAdzan: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const AdzanScreen()),
+        onOpenAdzan: () => setState(() => _index = 2),
+        onOpenAudio: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => const AudioScreen()),
         ),
-        onOpenAudio: () => setState(() => _index = 2),
         onOpenNotifications: () => Navigator.of(context).push(
           MaterialPageRoute<void>(builder: (_) => const NotificationScreen()),
         ),
       ),
       const QuranScreen(),
-      const AudioScreen(),
+      const AdzanScreen(),
       BookmarksScreen(
         onExploreQuran: () => setState(() => _index = 1),
       ),
@@ -47,7 +47,7 @@ class _MainShellState extends State<MainShell> {
     final items = <({IconData icon, String label})>[
       (icon: Icons.home_rounded, label: 'Beranda'),
       (icon: Icons.menu_book_rounded, label: 'Qur\'an'),
-      (icon: Icons.headphones_rounded, label: 'Audio'),
+      (icon: Icons.mosque_rounded, label: 'Adzan'),
       (icon: Icons.bookmark_rounded, label: 'Bookmark'),
       (icon: Icons.settings_rounded, label: 'Pengaturan'),
     ];

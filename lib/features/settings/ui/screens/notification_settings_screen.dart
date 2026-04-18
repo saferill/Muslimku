@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/utils/helpers.dart';
 import '../../../../di/injection.dart';
 
 class NotificationSettingsScreen extends StatelessWidget {
@@ -266,7 +267,15 @@ class NotificationSettingsScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
-                        onPressed: () => audio.playAdhanAsset(adzan.regularSound),
+                        onPressed: () async {
+                          await audio.playAdhanAsset(adzan.regularSound);
+                          if (!context.mounted) return;
+                          if ((audio.error ?? '').isNotEmpty) {
+                            context.showAppSnack(audio.error!);
+                            return;
+                          }
+                          context.showAppSnack('Preview adzan reguler diputar.');
+                        },
                         icon: const Icon(Icons.play_arrow_rounded),
                         label: const Text('Tes reguler'),
                       ),
@@ -292,7 +301,15 @@ class NotificationSettingsScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton.icon(
-                        onPressed: () => audio.playAdhanAsset(adzan.fajrSound),
+                        onPressed: () async {
+                          await audio.playAdhanAsset(adzan.fajrSound);
+                          if (!context.mounted) return;
+                          if ((audio.error ?? '').isNotEmpty) {
+                            context.showAppSnack(audio.error!);
+                            return;
+                          }
+                          context.showAppSnack('Preview adzan Subuh diputar.');
+                        },
                         icon: const Icon(Icons.play_arrow_rounded),
                         label: const Text('Tes subuh'),
                       ),
