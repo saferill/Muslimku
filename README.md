@@ -1,10 +1,5 @@
 <div align="center">
-  <img src="assets/Logo/Logo%20Muslimku.png" alt="Muslimku Logo" width="132" />
-  <h1>Muslimku</h1>
-  <p>
-    A Flutter-based Muslim companion app for prayer times, adzan reminders, Al-Qur'an reading,
-    tafsir, audio recitation, bookmarks, search, and daily spiritual routines.
-  </p>
+  <img src="assets/readme/muslimku-hero.svg" alt="Muslimku Hero" width="100%" />
 </div>
 
 <p align="center">
@@ -41,6 +36,25 @@ audio recitation, adzan reminders, bookmarks, and user preferences in one app.
 This repository is the main source of truth for the project and is structured so development can
 continue cleanly across features, releases, and future platform support.
 
+## Why Muslimku
+
+<table>
+  <tr>
+    <td width="33%">
+      <h3>Prayer First</h3>
+      <p>Built around daily prayer flow with adzan reminders, configurable offsets, location-aware schedules, and qibla support.</p>
+    </td>
+    <td width="33%">
+      <h3>Qur'an Focused</h3>
+      <p>Surah browsing, tafsir, reader mode, bookmarks, reading progress, and integrated audio are organized for everyday use.</p>
+    </td>
+    <td width="33%">
+      <h3>Release Ready</h3>
+      <p>APK variants are published through GitHub Releases so users can choose a build that matches their device and storage capacity.</p>
+    </td>
+  </tr>
+</table>
+
 ## Core Experience
 
 | Area | What users can do |
@@ -55,6 +69,29 @@ continue cleanly across features, releases, and future platform support.
 | Settings | Manage account, audio, notifications, Qur'an settings, app preferences, and security flows |
 
 ## Main Features
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Spiritual Daily Flow</h3>
+      <ul>
+        <li>Prayer times and next prayer countdown</li>
+        <li>Daily ayah and last read continuation</li>
+        <li>Adzan reminder scheduling</li>
+        <li>Qibla compass and location support</li>
+      </ul>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Reading and Audio</h3>
+      <ul>
+        <li>Surah list, detail, and reader</li>
+        <li>Tafsir, bookmark, copy, and share</li>
+        <li>Recitation playback and qari selection</li>
+        <li>Search and quick access to ayah results</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ### Authentication
 
@@ -199,6 +236,19 @@ Latest releases:
 
 - <https://github.com/saferill/Muslimku/releases>
 
+## Release Strategy
+
+Muslimku uses GitHub Actions to build Android release variants automatically. This makes the
+repository suitable both as a source backup and as a simple public delivery channel for testers
+or early users.
+
+Release flow:
+
+1. push source updates to `main`
+2. create or move a version tag
+3. GitHub Actions builds Android variants
+4. release assets are uploaded to GitHub Releases
+
 ## Run Locally
 
 Make sure Flutter SDK and the Android toolchain are installed.
@@ -293,4 +343,3 @@ Before deleting your local project folder, make sure:
 
 - GitHub: <https://github.com/saferill/Muslimku>
 - Releases: <https://github.com/saferill/Muslimku/releases>
-

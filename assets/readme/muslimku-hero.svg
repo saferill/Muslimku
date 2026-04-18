@@ -1,0 +1,44 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" rx="36" fill="#08120D"/>
+  <rect width="1280" height="640" rx="36" fill="url(#paint0_radial)"/>
+  <rect x="30" y="30" width="1220" height="580" rx="28" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+  <circle cx="1128" cy="122" r="168" fill="#C4A037" fill-opacity="0.14"/>
+  <circle cx="1128" cy="122" r="108" fill="#D4B55C" fill-opacity="0.12"/>
+  <circle cx="170" cy="526" r="210" fill="#1F7A4D" fill-opacity="0.15"/>
+  <circle cx="1032" cy="474" r="250" fill="#0F4C31" fill-opacity="0.2"/>
+  <path d="M0 468C111.2 398.4 236.8 373.333 376.8 392.8C586.8 422 664.4 522.8 865.2 510.8C999.067 502.8 1137.33 452.533 1280 360V640H0V468Z" fill="url(#paint1_linear)"/>
+  <g opacity="0.22">
+    <path d="M883 205L915 173L947 205" stroke="#E8F7ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M883 245L915 213L947 245" stroke="#E8F7ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M883 285L915 253L947 285" stroke="#E8F7ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M333 197L365 165L397 197" stroke="#E8F7ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M333 237L365 205L397 237" stroke="#E8F7ED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <rect x="92" y="102" width="148" height="148" rx="34" fill="#0D3B24"/>
+  <rect x="92" y="102" width="148" height="148" rx="34" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+  <circle cx="166" cy="176" r="50" fill="#E8F7ED"/>
+  <path d="M166 138.5C145.289 138.5 128.5 155.289 128.5 176C128.5 192.567 139.254 206.618 154.156 211.575C156.031 211.924 156.719 210.773 156.719 209.789C156.719 208.898 156.688 205.895 156.672 202.695C146.241 204.964 144.04 197.672 144.04 197.672C142.334 193.335 139.871 192.182 139.871 192.182C136.461 189.851 140.129 189.898 140.129 189.898C143.902 190.16 145.887 193.772 145.887 193.772C149.237 199.515 154.677 197.854 156.82 196.892C157.158 194.464 158.131 192.807 159.206 191.867C150.877 190.918 142.124 187.701 142.124 173.323C142.124 169.226 143.589 165.876 145.995 163.254C145.605 162.303 144.317 158.47 146.363 153.286C146.363 153.286 149.525 152.273 156.719 157.138C159.727 156.302 162.954 155.884 166.18 155.868C169.406 155.884 172.633 156.302 175.641 157.138C182.835 152.273 185.997 153.286 185.997 153.286C188.043 158.47 186.755 162.303 186.365 163.254C188.771 165.876 190.236 169.226 190.236 173.323C190.236 187.734 181.467 190.899 173.122 191.831C174.464 192.995 175.685 195.275 175.685 198.77C175.685 203.769 175.641 208.518 175.641 209.789C175.641 210.785 176.32 211.945 178.226 211.571C193.118 206.611 203.868 192.563 203.868 176C203.868 155.289 187.079 138.5 166.368 138.5H166Z" fill="#08120D"/>
+  <text x="286" y="176" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700">Muslimku</text>
+  <text x="286" y="228" fill="#CFE9D7" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="500">Daily spiritual companion for prayer, Qur'an, audio, and adzan reminders.</text>
+  <rect x="286" y="280" width="208" height="58" rx="29" fill="#0D3B24"/>
+  <rect x="510" y="280" width="248" height="58" rx="29" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <text x="390" y="318" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Flutter</text>
+  <text x="634" y="318" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Firebase + Native Android</text>
+  <rect x="92" y="430" width="1096" height="108" rx="26" fill="rgba(7,24,16,0.74)" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <text x="144" y="475" fill="#E7F4EB" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Prayer Times</text>
+  <text x="144" y="508" fill="#A5C7B2" font-family="Arial, Helvetica, sans-serif" font-size="20">Local adzan reminders with configurable sounds and offsets.</text>
+  <text x="484" y="475" fill="#E7F4EB" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Qur'an Reader</text>
+  <text x="484" y="508" fill="#A5C7B2" font-family="Arial, Helvetica, sans-serif" font-size="20">Surah browsing, tafsir, bookmark, last read, and audio.</text>
+  <text x="824" y="475" fill="#E7F4EB" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Release Builds</text>
+  <text x="824" y="508" fill="#A5C7B2" font-family="Arial, Helvetica, sans-serif" font-size="20">Universal, arm64-v8a, armeabi-v7a, and x86_64 packages.</text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(990 110) rotate(142.653) scale(1023.69 842.082)">
+      <stop stop-color="#133A27"/>
+      <stop offset="1" stop-color="#08120D"/>
+    </radialGradient>
+    <linearGradient id="paint1_linear" x1="640" y1="360" x2="640" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F2C1C" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0B1A12"/>
+    </linearGradient>
+  </defs>
+</svg>
