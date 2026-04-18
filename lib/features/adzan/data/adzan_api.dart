@@ -1,0 +1,3 @@
+class AdzanApi {
+  const AdzanApi();
+}

@@ -1,0 +1,66 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+.android-home/
+.dart-appdata/
+.dart-local/
+.gradle-home*/
+.codex-hot-run*/
+.external_refs/
+.tmp/
+.vscode/
+device-current.png
+.chrome-run*.log
+.chrome-run*.err.log
+.hotrun*.log
+.hotrun*.err.log
+.diag-build*.log
+.diag-build*.err.log
+.qa3-build*.log
+.qa3-build*.err.log
+.windows-run*.log
+.windows-run*.err.log
+flutter_*.log
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio build artifacts
+/android/app/debug
+/android/app/profile
+/android/app/release
+/android/.gradle-*/
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+android/key.properties
+*.jks
+*.keystore
