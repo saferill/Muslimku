@@ -88,6 +88,40 @@ Kalau mau menyimpan APK di GitHub, opsi yang benar:
 2. upload APK ke GitHub Releases
 3. atau pakai Git LFS
 
+## GitHub Releases
+
+Repo ini bisa dipakai untuk menyimpan build Android dalam beberapa ukuran file agar pengguna bisa memilih sesuai kapasitas HP:
+
+- `universal` untuk semua device Android
+- `arm64-v8a` untuk kebanyakan HP Android baru
+- `armeabi-v7a` untuk HP Android lama yang butuh ukuran lebih kecil
+
+Workflow release Android ada di:
+
+- `.github/workflows/android-release.yml`
+
+Untuk build Android lewat GitHub Actions, kamu perlu menambahkan secret:
+
+- `ANDROID_GOOGLE_SERVICES_JSON`
+
+Isi secret itu dengan isi file `android/app/google-services.json`.
+
+### Catatan iPhone
+
+Untuk iPhone, distribusi ke banyak user **tidak cocok** lewat file yang diunduh dari GitHub Releases seperti Android.
+
+Jalur yang benar untuk iPhone adalah:
+
+1. `TestFlight`
+2. `App Store`
+
+Aku tetap menyiapkan workflow dasar iOS di repo, tetapi agar bisa dipakai user iPhone secara nyata kamu tetap butuh:
+
+- Apple Developer account
+- signing certificate
+- provisioning profile
+- App Store Connect setup
+
 ## Backup Lokal
 
 Kalau repo GitHub ini sudah aman dan lengkap, kamu bisa hapus folder lokal project dari laptop.
