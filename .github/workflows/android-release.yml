@@ -52,9 +52,13 @@ jobs:
         run: flutter pub get
 
       - name: Build universal release APK
+        env:
+          GRADLE_OPTS: -Dorg.gradle.vfs.watch=false
         run: flutter build apk --release
 
       - name: Build split ABI release APKs
+        env:
+          GRADLE_OPTS: -Dorg.gradle.vfs.watch=false
         run: flutter build apk --release --split-per-abi
 
       - name: Collect release assets
