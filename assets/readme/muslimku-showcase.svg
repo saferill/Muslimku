@@ -1,0 +1,60 @@
+<svg width="1280" height="760" viewBox="0 0 1280 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="760" rx="36" fill="#07130D"/>
+  <rect x="32" y="32" width="1216" height="696" rx="28" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+  <circle cx="181" cy="138" r="160" fill="#1C6A44" fill-opacity="0.18"/>
+  <circle cx="1120" cy="624" r="206" fill="#D2B34C" fill-opacity="0.12"/>
+  <text x="94" y="112" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">Experience Preview</text>
+  <text x="94" y="154" fill="#B9D8C6" font-family="Arial, Helvetica, sans-serif" font-size="24">Prayer, Qur'an, and audio flows styled for a calm spiritual experience.</text>
+
+  <g transform="translate(94 208)">
+    <rect width="286" height="472" rx="34" fill="#0D1117"/>
+    <rect x="10" y="10" width="266" height="452" rx="26" fill="#F6F4EE"/>
+    <rect x="103" y="22" width="80" height="12" rx="6" fill="#DAD8D1"/>
+    <text x="28" y="74" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Prayer Times</text>
+    <text x="28" y="103" fill="#5C6C60" font-family="Arial, Helvetica, sans-serif" font-size="15">Jakarta, Indonesia</text>
+    <rect x="24" y="132" width="238" height="122" rx="22" fill="#0D3B24"/>
+    <text x="42" y="168" fill="#D8F1E1" font-family="Arial, Helvetica, sans-serif" font-size="14">Next Prayer</text>
+    <text x="42" y="207" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Maghrib</text>
+    <text x="42" y="234" fill="#B8D9C4" font-family="Arial, Helvetica, sans-serif" font-size="16">17:48 WIB • 00:14:26 left</text>
+    <rect x="24" y="284" width="238" height="60" rx="18" fill="#FFFFFF"/>
+    <text x="44" y="322" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Daily Ayah</text>
+    <rect x="24" y="362" width="238" height="74" rx="18" fill="#ECE9E0"/>
+    <text x="44" y="393" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Continue Reading</text>
+    <text x="44" y="420" fill="#5F6B62" font-family="Arial, Helvetica, sans-serif" font-size="14">Surah Al-Baqarah • Ayah 255</text>
+  </g>
+
+  <g transform="translate(497 168)">
+    <rect width="286" height="552" rx="34" fill="#0D1117"/>
+    <rect x="10" y="10" width="266" height="532" rx="26" fill="#F7F4EE"/>
+    <rect x="103" y="22" width="80" height="12" rx="6" fill="#DAD8D1"/>
+    <text x="28" y="70" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Qur'an Reader</text>
+    <rect x="24" y="96" width="238" height="74" rx="20" fill="#0D3B24"/>
+    <text x="44" y="126" fill="#D8F1E1" font-family="Arial, Helvetica, sans-serif" font-size="14">Surah 36</text>
+    <text x="44" y="154" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Yasin</text>
+    <text x="44" y="200" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">يس</text>
+    <text x="44" y="252" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">وَالْقُرْآنِ الْحَكِيمِ</text>
+    <text x="44" y="284" fill="#5F6B62" font-family="Arial, Helvetica, sans-serif" font-size="15">By the wise Qur'an.</text>
+    <rect x="24" y="316" width="238" height="72" rx="18" fill="#ECE9E0"/>
+    <text x="44" y="347" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Tafsir</text>
+    <text x="44" y="373" fill="#5F6B62" font-family="Arial, Helvetica, sans-serif" font-size="14">Accessible reading flow with tafsir and audio.</text>
+    <rect x="24" y="418" width="238" height="72" rx="18" fill="#FFFFFF"/>
+    <text x="44" y="450" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700">Audio</text>
+    <text x="44" y="476" fill="#5F6B62" font-family="Arial, Helvetica, sans-serif" font-size="14">Per-ayah playback and reciter selection.</text>
+  </g>
+
+  <g transform="translate(900 208)">
+    <rect width="286" height="472" rx="34" fill="#0D1117"/>
+    <rect x="10" y="10" width="266" height="452" rx="26" fill="#F6F4EE"/>
+    <rect x="103" y="22" width="80" height="12" rx="6" fill="#DAD8D1"/>
+    <text x="28" y="74" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Audio & Adzan</text>
+    <rect x="24" y="110" width="238" height="100" rx="22" fill="#ECE9E0"/>
+    <text x="44" y="145" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Reciter</text>
+    <text x="44" y="176" fill="#5F6B62" font-family="Arial, Helvetica, sans-serif" font-size="15">Mishary Rashid Alafasy</text>
+    <rect x="24" y="236" width="238" height="112" rx="22" fill="#0D3B24"/>
+    <text x="44" y="272" fill="#D8F1E1" font-family="Arial, Helvetica, sans-serif" font-size="14">Adzan Reminder</text>
+    <text x="44" y="307" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Subuh Sound</text>
+    <text x="44" y="334" fill="#B8D9C4" font-family="Arial, Helvetica, sans-serif" font-size="15">Local notification + exact alarm flow</text>
+    <rect x="24" y="372" width="238" height="60" rx="18" fill="#FFFFFF"/>
+    <text x="44" y="410" fill="#113A25" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Qibla Compass</text>
+  </g>
+</svg>

@@ -28,6 +28,12 @@
 
 ---
 
+## Visual Showcase
+
+<div align="center">
+  <img src="assets/readme/muslimku-showcase.svg" alt="Muslimku Showcase" width="100%" />
+</div>
+
 ## Overview
 
 Muslimku is designed as a daily spiritual companion that keeps prayer schedules, Qur'an reading,
@@ -236,6 +242,20 @@ Latest releases:
 
 - <https://github.com/saferill/Muslimku/releases>
 
+### Quick Download Picks
+
+<p>
+  <a href="https://github.com/saferill/Muslimku/releases/latest">
+    <img src="https://img.shields.io/badge/Universal%20APK-Max%20Compatibility-111827?style=for-the-badge&logo=android&logoColor=white" alt="Universal APK" />
+  </a>
+  <a href="https://github.com/saferill/Muslimku/releases/latest">
+    <img src="https://img.shields.io/badge/arm64--v8a-Recommended-0D3B24?style=for-the-badge&logo=android&logoColor=white" alt="arm64-v8a" />
+  </a>
+  <a href="https://github.com/saferill/Muslimku/releases/latest">
+    <img src="https://img.shields.io/badge/armeabi--v7a-Smaller%20Size-7A5C1B?style=for-the-badge&logo=android&logoColor=white" alt="armeabi-v7a" />
+  </a>
+</p>
+
 ## Release Strategy
 
 Muslimku uses GitHub Actions to build Android release variants automatically. This makes the
@@ -343,3 +363,22 @@ Before deleting your local project folder, make sure:
 
 - GitHub: <https://github.com/saferill/Muslimku>
 - Releases: <https://github.com/saferill/Muslimku/releases>
+
+## Project Status
+
+<table>
+  <tr>
+    <td width="33%">
+      <h3>Codebase</h3>
+      <p>Feature-based Flutter structure with shared core, service, and settings modules.</p>
+    </td>
+    <td width="33%">
+      <h3>Distribution</h3>
+      <p>Android APK variants are published through GitHub Releases for easier device coverage.</p>
+    </td>
+    <td width="33%">
+      <h3>Platform Direction</h3>
+      <p>Android is the active delivery path, while iOS remains prepared for future TestFlight or App Store release flow.</p>
+    </td>
+  </tr>
+</table>
