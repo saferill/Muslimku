@@ -130,6 +130,19 @@ class AdzanController extends ChangeNotifier {
     return lookup.message;
   }
 
+  Future<String?> syncCustomLocation(String query) async {
+    final lookup = await _locationService.resolveManualLocation(query);
+    if (!lookup.success || lookup.location == null) {
+      return lookup.message;
+    }
+    _locationLabel = lookup.location!.label;
+    _exactLocation = lookup.location;
+    await _persist();
+    notifyListeners();
+    await scheduleUpcomingNotifications();
+    return lookup.message;
+  }
+
   Future<void> setMasterEnabled(bool value) async {
     _masterEnabled = value;
     await _persist();
@@ -239,6 +252,13 @@ class AdzanController extends ChangeNotifier {
 
       for (var dayOffset = 0; dayOffset < 7; dayOffset += 1) {
         final dayUtc = nowUtc.add(Duration(days: dayOffset));
+        await _repository.primeRemoteSnapshot(
+          locationLabel: _locationLabel,
+          nowUtc: dayUtc,
+          calculationMethod: _calculationMethod,
+          madhab: _madhab,
+          locationOverride: _exactLocation,
+        );
         final snapshot = _repository.buildSnapshot(
           locationLabel: _locationLabel,
           nowUtc: dayUtc,

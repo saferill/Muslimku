@@ -1,18 +1,30 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/storage/local_storage.dart';
 import '../../../routes/route_names.dart';
 import '../data/models/notification_item_model.dart';
 
 class NotificationController extends ChangeNotifier {
-  NotificationController(this._storage) {
+  NotificationController(
+    this._storage, {
+    FirebaseFirestore? firestore,
+    required String? Function() currentUserIdProvider,
+    required bool Function() isAuthenticatedProvider,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _currentUserIdProvider = currentUserIdProvider,
+        _isAuthenticatedProvider = isAuthenticatedProvider {
     _hydrate();
   }
 
   static const _storageKey = 'notifications.center.v1';
 
   final LocalStorage _storage;
+  final FirebaseFirestore _firestore;
+  final String? Function() _currentUserIdProvider;
+  final bool Function() _isAuthenticatedProvider;
 
   bool _loading = true;
   bool _dailyAyahEnabled = true;
@@ -28,8 +40,11 @@ class NotificationController extends ChangeNotifier {
     _items = _storage
         .getJsonList(_storageKey)
         .map(NotificationItemModel.fromJson)
+        .where(
+            (item) => item.id != 'seed_app_update' && item.category != 'update')
         .toList();
-    _seedDefaults();
+    await _hydrateCloudItems();
+    _ensureTodayDailyAyah();
     _sort();
     _loading = false;
     await _persist();
@@ -47,7 +62,7 @@ class NotificationController extends ChangeNotifier {
     if (!value) {
       _items = _items.where((item) => item.category != 'daily_ayah').toList();
     } else {
-      _seedDefaults();
+      _ensureTodayDailyAyah();
     }
     _sort();
     await _persist();
@@ -87,7 +102,7 @@ class NotificationController extends ChangeNotifier {
       ...preserved,
       ...scheduledItems,
     ];
-    _seedDefaults();
+    _ensureTodayDailyAyah();
     _sort();
     await _persist();
     notifyListeners();
@@ -150,7 +165,7 @@ class NotificationController extends ChangeNotifier {
 
   Future<void> clearAll() async {
     _items = const <NotificationItemModel>[];
-    _seedDefaults();
+    _ensureTodayDailyAyah();
     await _persist();
     notifyListeners();
   }
@@ -163,46 +178,27 @@ class NotificationController extends ChangeNotifier {
     return item.routeIntArgument;
   }
 
-  void _seedDefaults() {
-    final updateId = 'seed_app_update';
-    final hasUpdate = _items.any((item) => item.id == updateId);
-    if (!hasUpdate) {
-      _items = <NotificationItemModel>[
-        NotificationItemModel(
-          id: updateId,
-          title: 'App Update: Qibla Compass',
-          body:
-              'Qibla compass and prayer sync are active. Pastikan izin lokasi tetap aktif untuk hasil terbaik.',
-          category: 'update',
-          createdAtEpochMs: DateTime.now().millisecondsSinceEpoch,
-          read: false,
-          routeName: RouteNames.about,
-        ),
-        ..._items,
-      ];
-    }
+  void _ensureTodayDailyAyah() {
+    if (!_dailyAyahEnabled) return;
+    final now = DateTime.now();
+    final dailyId = 'daily_ayah_${now.year}_${now.month}_${now.day}';
+    final hasDailyAyah = _items.any((item) => item.id == dailyId);
+    if (hasDailyAyah) return;
 
-    if (_dailyAyahEnabled) {
-      final dailyId =
-          'daily_ayah_${DateTime.now().year}_${DateTime.now().month}_${DateTime.now().day}';
-      final hasDailyAyah = _items.any((item) => item.id == dailyId);
-      if (!hasDailyAyah) {
-        _items = <NotificationItemModel>[
-          NotificationItemModel(
-            id: dailyId,
-            title: 'Daily Ayah Reflection',
-            body:
-                '"So remember Me; I will remember you..." (2:152) • Tap untuk lanjut baca di reader.',
-            category: 'daily_ayah',
-            createdAtEpochMs: DateTime.now().millisecondsSinceEpoch,
-            read: false,
-            routeName: RouteNames.reader,
-            routeIntArgument: 2,
-          ),
-          ..._items,
-        ];
-      }
-    }
+    _items = <NotificationItemModel>[
+      NotificationItemModel(
+        id: dailyId,
+        title: 'Refleksi Ayat Harian',
+        body:
+            '${AppConstants.dailyAyah} • Ketuk untuk melanjutkan bacaan di reader.',
+        category: 'daily_ayah',
+        createdAtEpochMs: now.millisecondsSinceEpoch,
+        read: false,
+        routeName: RouteNames.reader,
+        routeIntArgument: 2,
+      ),
+      ..._items,
+    ];
   }
 
   void _sort() {
@@ -215,10 +211,69 @@ class NotificationController extends ChangeNotifier {
   }
 
   Future<void> _persist() {
-    return _storage.setJsonList(
-      _storageKey,
-      _items.map((item) => item.toJson()).toList(),
-    );
+    return _storage
+        .setJsonList(
+          _storageKey,
+          _items.map((item) => item.toJson()).toList(),
+        )
+        .then((_) => _syncCloudIfNeeded());
+  }
+
+  Future<void> _hydrateCloudItems() async {
+    final uid = _currentUserIdProvider();
+    if (!_isAuthenticatedProvider() || (uid ?? '').isEmpty) {
+      return;
+    }
+
+    try {
+      final snapshot = await _cloudDoc(uid!).get();
+      final rawItems = snapshot.data()?['items'];
+      if (rawItems is! List) return;
+
+      final merged = <String, NotificationItemModel>{
+        for (final item in _items) item.id: item,
+      };
+      for (final entry in rawItems) {
+        if (entry is! Map) continue;
+        final item = NotificationItemModel.fromJson(
+          Map<String, dynamic>.from(entry),
+        );
+        final current = merged[item.id];
+        if (current == null ||
+            item.createdAtEpochMs >= current.createdAtEpochMs) {
+          merged[item.id] = item;
+        }
+      }
+      _items = merged.values.toList();
+    } catch (_) {
+      // Keep local inbox when cloud fetch fails.
+    }
+  }
+
+  Future<void> _syncCloudIfNeeded() async {
+    final uid = _currentUserIdProvider();
+    if (!_isAuthenticatedProvider() || (uid ?? '').isEmpty) {
+      return;
+    }
+
+    try {
+      await _cloudDoc(uid!).set(
+        <String, dynamic>{
+          'items': _items.map((item) => item.toJson()).toList(),
+          'updatedAtEpochMs': DateTime.now().millisecondsSinceEpoch,
+        },
+        SetOptions(merge: true),
+      );
+    } catch (_) {
+      // Keep local state authoritative if cloud sync fails.
+    }
+  }
+
+  DocumentReference<Map<String, dynamic>> _cloudDoc(String uid) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('state')
+        .doc('notification_center');
   }
 }
-

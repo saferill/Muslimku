@@ -30,12 +30,11 @@ class NotificationSettingsScreen extends StatelessWidget {
     final audio = dependencies.audioController;
 
     return AnimatedBuilder(
-      animation:
-          Listenable.merge(<Listenable>[
-            dependencies.authController,
-            adzan,
-            audio,
-          ]),
+      animation: Listenable.merge(<Listenable>[
+        dependencies.authController,
+        adzan,
+        audio,
+      ]),
       builder: (context, _) {
         final state = settings.state;
         return Scaffold(
@@ -78,10 +77,10 @@ class NotificationSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Prayer Delivery',
+                  title: 'Pengiriman Pengingat',
                   children: <Widget>[
                     ListTile(
-                      title: const Text('Pre-reminder'),
+                      title: const Text('Pengingat Awal'),
                       subtitle: Text(
                           '${adzan.preReminderMinutes} menit sebelum adzan'),
                     ),
@@ -95,7 +94,7 @@ class NotificationSettingsScreen extends StatelessWidget {
                           adzan.setPreReminderMinutes(value.round()),
                     ),
                     ListTile(
-                      title: const Text('Offset Time'),
+                      title: const Text('Offset Waktu'),
                       subtitle: Text(
                         '${adzan.offsetMinutes >= 0 ? '+' : ''}${adzan.offsetMinutes} menit dari jadwal kalkulasi',
                       ),
@@ -110,9 +109,9 @@ class NotificationSettingsScreen extends StatelessWidget {
                           adzan.setOffsetMinutes(value.round()),
                     ),
                     ListTile(
-                      title: const Text('Preview Volume'),
+                      title: const Text('Volume Tes'),
                       subtitle: Text(
-                        '${(adzan.volume * 100).round()}% untuk test sound dalam aplikasi',
+                        '${(adzan.volume * 100).round()}% untuk tes suara di dalam aplikasi',
                       ),
                     ),
                     Slider(
@@ -126,7 +125,7 @@ class NotificationSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Per Prayer',
+                  title: 'Per Waktu Salat',
                   children: <Widget>[
                     ...const <String>[
                       'Subuh',
@@ -147,7 +146,7 @@ class NotificationSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Quiet Hours',
+                  title: 'Jam Tenang',
                   children: <Widget>[
                     SwitchListTile.adaptive(
                       title: const Text('Jendela Jangan Ganggu'),
@@ -202,7 +201,7 @@ class NotificationSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Prayer Method',
+                  title: 'Metode Salat',
                   children: <Widget>[
                     DropdownButtonFormField<String>(
                       initialValue: adzan.calculationMethod,
@@ -245,7 +244,7 @@ class NotificationSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Sounds',
+                  title: 'Suara',
                   children: <Widget>[
                     DropdownButtonFormField<String>(
                       initialValue: adzan.regularSound,
@@ -274,7 +273,8 @@ class NotificationSettingsScreen extends StatelessWidget {
                             context.showAppSnack(audio.error!);
                             return;
                           }
-                          context.showAppSnack('Preview adzan reguler diputar.');
+                          context
+                              .showAppSnack('Preview adzan reguler diputar.');
                         },
                         icon: const Icon(Icons.play_arrow_rounded),
                         label: const Text('Tes reguler'),

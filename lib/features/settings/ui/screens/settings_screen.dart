@@ -93,7 +93,8 @@ class SettingsScreen extends StatelessWidget {
                   children: <Widget>[
                     SettingsTile(
                       icon: Icons.person_outline_rounded,
-                      title: state.isGuest ? 'Sign In / Sign Up' : 'Edit Profil',
+                      title:
+                          state.isGuest ? 'Sign In / Sign Up' : 'Edit Profil',
                       subtitle: state.isGuest
                           ? 'Masuk untuk sinkronisasi cloud dan multi-device'
                           : state.user.email,
@@ -113,7 +114,7 @@ class SettingsScreen extends StatelessWidget {
                         icon: Icons.sync_rounded,
                         title: 'Sinkronkan Data Cloud',
                         subtitle:
-                            '${settings.bookmarkCount} bookmark - ${settings.noteCount} note',
+                            '${settings.bookmarkCount} bookmark • ${settings.noteCount} catatan',
                         onTap: () async {
                           await settings.syncCloudData();
                           if (!context.mounted) return;
@@ -172,7 +173,7 @@ class SettingsScreen extends StatelessWidget {
                       icon: Icons.headphones_rounded,
                       title: 'Pengaturan Audio',
                       subtitle:
-                          '${state.quranReciter} - ${settings.downloadedAudioCount} offline',
+                          '${state.quranReciter} • ${settings.downloadedAudioCount} file lokal',
                       onTap: () => Navigator.of(context)
                           .pushNamed(RouteNames.audioSettings),
                     ),
@@ -210,7 +211,7 @@ class SettingsScreen extends StatelessWidget {
                       icon: Icons.folder_delete_outlined,
                       title: 'Hapus Unduhan',
                       subtitle:
-                          '${settings.downloadedAudioCount} audio offline akan dihapus',
+                          '${settings.downloadedAudioCount} audio lokal akan dihapus',
                       onTap: () async {
                         await settings.clearDownloads();
                         if (!context.mounted) return;
@@ -238,7 +239,7 @@ class SettingsScreen extends StatelessWidget {
                       title: 'Biometrik',
                       subtitle: security.biometricsAvailable
                           ? (security.biometricsEnabled
-                              ? 'Biometric unlock aktif'
+                              ? 'Buka kunci biometrik aktif'
                               : 'Gunakan sidik jari atau wajah untuk membuka aplikasi')
                           : 'Biometrik belum tersedia di perangkat ini',
                       onTap: () {
@@ -327,7 +328,8 @@ class SettingsScreen extends StatelessWidget {
                     SettingsTile(
                       icon: Icons.cloud_outlined,
                       title: 'Status Sistem',
-                      subtitle: 'Empty, offline, and error previews',
+                      subtitle:
+                          'Ringkasan status bookmark, jadwal adzan, dan notifikasi lokal',
                       onTap: () => Navigator.of(context)
                           .pushNamed(RouteNames.systemStates),
                     ),
@@ -335,7 +337,7 @@ class SettingsScreen extends StatelessWidget {
                       icon: Icons.info_outline_rounded,
                       title: 'Tentang Muslimku',
                       subtitle:
-                          '${AppConstants.appVersion} - ${AppConstants.appBuild}',
+                          '${AppConstants.appVersion} • ${AppConstants.appBuild}',
                       onTap: () =>
                           Navigator.of(context).pushNamed(RouteNames.about),
                     ),
@@ -365,6 +367,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Future<void> _showPinDialog(BuildContext context) async {
+    final currentController = TextEditingController();
     final pinController = TextEditingController();
     final confirmController = TextEditingController();
     final security = AppDependenciesScope.of(context).securityController;
@@ -378,6 +381,19 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                if (security.pinEnabled) ...<Widget>[
+                  TextField(
+                    controller: currentController,
+                    keyboardType: TextInputType.number,
+                    obscureText: true,
+                    maxLength: 6,
+                    decoration: const InputDecoration(
+                      labelText: 'PIN Saat Ini',
+                      counterText: '',
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 TextField(
                   controller: pinController,
                   keyboardType: TextInputType.number,
@@ -406,7 +422,14 @@ class SettingsScreen extends StatelessWidget {
             if (security.pinEnabled)
               TextButton(
                 onPressed: () async {
-                  await security.disablePin();
+                  final success = await security.disablePin(
+                    currentPin: currentController.text,
+                  );
+                  if (!success) {
+                    if (!context.mounted) return;
+                    context.showAppSnack('PIN saat ini tidak cocok.');
+                    return;
+                  }
                   if (!dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                   if (!context.mounted) return;
@@ -427,7 +450,19 @@ class SettingsScreen extends StatelessWidget {
                   context.showAppSnack('PIN minimal 4 digit dan harus sama.');
                   return;
                 }
-                await security.configurePin(pin);
+                if (!security.pinEnabled) {
+                  await security.configurePin(pin);
+                } else {
+                  final changed = await security.changePin(
+                    currentPin: currentController.text,
+                    newPin: pin,
+                  );
+                  if (!changed) {
+                    if (!context.mounted) return;
+                    context.showAppSnack('PIN saat ini tidak cocok.');
+                    return;
+                  }
+                }
                 if (!dialogContext.mounted) return;
                 Navigator.of(dialogContext).pop();
                 if (!context.mounted) return;
@@ -530,6 +565,12 @@ class SettingsScreen extends StatelessWidget {
             await adzan.syncLocation(value);
             if (!context.mounted) return;
             context.showAppSnack('Lokasi salat diperbarui ke $value.');
+          },
+          onManualSearch: (value) async {
+            final message = await adzan.syncCustomLocation(value);
+            auth.updateLocation(adzan.locationLabel);
+            if (!context.mounted || message == null) return;
+            context.showAppSnack(message);
           },
         );
       },
@@ -725,9 +766,9 @@ Hasil aktual:
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 _FaqEntry(
-                  question: 'Kenapa bookmark guest tidak sync?',
+                  question: 'Kenapa bookmark mode tamu tidak sync?',
                   answer:
-                      'Mode guest hanya menyimpan data lokal di perangkat. Sign In diperlukan untuk sinkronisasi cloud.',
+                      'Mode tamu hanya menyimpan data lokal di perangkat. Sign In diperlukan untuk sinkronisasi cloud.',
                 ),
                 _FaqEntry(
                   question: 'Bagaimana mengaktifkan adzan lokal?',
@@ -737,7 +778,7 @@ Hasil aktual:
                 _FaqEntry(
                   question: 'Apakah audio Quran bisa offline?',
                   answer:
-                      'Bisa. Buka Audio screen, unduh surah, lalu file akan tersedia untuk pemutaran lokal.',
+                      'Bisa. Buka layar Audio, unduh surah, lalu file akan tersedia untuk pemutaran lokal.',
                 ),
                 _FaqEntry(
                   question: 'Bagaimana memindahkan data ke perangkat lain?',

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/network/api_client.dart';
 import '../core/services/audio_service.dart';
@@ -8,6 +9,7 @@ import '../core/services/location_service.dart';
 import '../core/services/notification_service.dart';
 import '../core/storage/local_storage.dart';
 import '../core/storage/secure_storage.dart';
+import '../features/adzan/data/adzan_api.dart';
 import '../features/adzan/data/adzan_repository.dart';
 import '../features/adzan/logic/adzan_controller.dart';
 import '../features/audio/logic/audio_controller.dart';
@@ -64,19 +66,32 @@ AppDependencies createDependencies() {
   final storage = LocalStorage();
   final secureStorage = SecureStorage();
   final apiClient = ApiClient();
-  final authService = AuthService();
+  final authService = AuthService(apiClient: apiClient);
   final authRepository = AuthRepository(AuthApi(authService));
   final locationService = LocationService();
   final notificationService = NotificationService();
-  final notificationController = NotificationController(storage);
   final audioService = AudioService();
   final connectivityService = ConnectivityService();
   final quranRepository = QuranRepository(
     api: QuranApi(apiClient),
     storage: storage,
   );
-  final adzanRepository = const AdzanRepository();
+  final adzanRepository = AdzanRepository(api: AdzanApi(apiClient));
 
+  final authController = AuthController(
+    storage: storage,
+    repository: authRepository,
+    locationService: locationService,
+    notificationService: notificationService,
+  );
+  final notificationController = NotificationController(
+    storage,
+    firestore: FirebaseFirestore.instance,
+    currentUserIdProvider: () => authController.state.isAuthenticated
+        ? authController.state.user.uid
+        : null,
+    isAuthenticatedProvider: () => authController.state.isAuthenticated,
+  );
   audioService.warmup();
   connectivityService.isOnline();
   notificationService.initialize(
@@ -91,13 +106,6 @@ AppDependencies createDependencies() {
       }
       navigator.pushNamed(RouteNames.notifications);
     },
-  );
-
-  final authController = AuthController(
-    storage: storage,
-    repository: authRepository,
-    locationService: locationService,
-    notificationService: notificationService,
   );
   final quranController = QuranController(quranRepository);
   final adzanController = AdzanController(
@@ -123,6 +131,7 @@ AppDependencies createDependencies() {
   );
   notificationController.setDailyAyahEnabled(authController.state.dailyVerses);
   var previousAccessMode = authController.state.accessMode;
+  var previousUserUid = authController.state.user.uid;
 
   authController.addListener(() {
     final location = authController.state.currentLocation;
@@ -134,8 +143,15 @@ AppDependencies createDependencies() {
     if (authController.state.accessMode == AppAccessMode.authenticated &&
         previousAccessMode != AppAccessMode.authenticated) {
       quranController.syncCloudData();
+      notificationController.reload();
+    } else if (previousAccessMode == AppAccessMode.authenticated &&
+        authController.state.accessMode != AppAccessMode.authenticated) {
+      notificationController.reload();
+    } else if (authController.state.user.uid != previousUserUid) {
+      notificationController.reload();
     }
     previousAccessMode = authController.state.accessMode;
+    previousUserUid = authController.state.user.uid;
   });
 
   return AppDependencies(

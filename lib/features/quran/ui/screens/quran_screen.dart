@@ -109,7 +109,7 @@ class _QuranScreenState extends State<QuranScreen> {
                       const SizedBox(height: 12),
                       FilledButton(
                         onPressed: controller.bootstrap,
-                        child: const Text('Retry'),
+                        child: const Text('Coba Lagi'),
                       ),
                     ],
                   )
@@ -117,7 +117,7 @@ class _QuranScreenState extends State<QuranScreen> {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 24),
                     child: Text(
-                      'No data',
+                      'Data surah belum tersedia',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                   )

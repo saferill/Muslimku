@@ -148,7 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               return;
                             }
                             if (authController.state.requiresVerification) {
-                              Navigator.of(context).pushNamed(RouteNames.otp);
+                              Navigator.of(context)
+                                  .pushNamed(RouteNames.verifyEmail);
                             }
                           },
                         ),

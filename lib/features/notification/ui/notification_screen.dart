@@ -87,7 +87,7 @@ class NotificationScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        'Pengingat adzan, daily ayah, dan update aplikasi akan tampil di sini.',
+                        'Pengingat adzan, reminder, dan refleksi ayat harian akan tampil di sini.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.textSecondary,

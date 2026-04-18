@@ -37,7 +37,7 @@ class AppRoutes {
         );
       case RouteNames.signup:
         return _page(const SignupScreen(), settings);
-      case RouteNames.otp:
+      case RouteNames.verifyEmail:
         return _page(const OtpScreen(), settings);
       case RouteNames.forgotPassword:
         return _page(const ForgotPasswordScreen(), settings);

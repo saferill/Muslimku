@@ -22,6 +22,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
   final _recoveryController = TextEditingController();
   String? _recoveredUsername;
   String? _recoveredEmail;
+  String? _deliveryTarget;
 
   @override
   void dispose() {
@@ -71,7 +72,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'Masukkan email atau nomor telepon yang terhubung ke akunmu. Kami akan mencari username yang tersimpan lalu menampilkannya di aplikasi.',
+                      'Masukkan email atau nomor telepon yang terhubung ke akunmu. Muslimku akan mencoba mengirim pengingat username ke tujuan tersebut. Jika layanan pengiriman belum aktif, aplikasi akan menampilkan hasilnya langsung di layar ini.',
                       style: TextStyle(
                         height: 1.55,
                         fontSize: 16,
@@ -81,7 +82,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                     const SizedBox(height: 24),
                     AppTextField(
                       controller: _recoveryController,
-                      label: 'Email / Phone',
+                      label: 'Email / Nomor Telepon',
                       hint: 'name@example.com / +62...',
                       icon: Icons.person_search_rounded,
                       keyboardType: TextInputType.emailAddress,
@@ -94,6 +95,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                         setState(() {
                           _recoveredUsername = null;
                           _recoveredEmail = null;
+                          _deliveryTarget = null;
                         });
                       },
                     ),
@@ -113,9 +115,12 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                           setState(() {
                             _recoveredUsername = result.username;
                             _recoveredEmail = result.email;
+                            _deliveryTarget = result.maskedDestination;
                           });
                           context.showAppSnack(
-                            'Username ditemukan dan ditampilkan di bawah.',
+                            result.maskedDestination == null
+                                ? 'Username ditemukan dan ditampilkan di bawah.'
+                                : 'Username dikirim ke ${result.maskedDestination}.',
                           );
                           return;
                         }
@@ -160,6 +165,15 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                                 ),
                               ),
                             ],
+                            if ((_deliveryTarget ?? '').isNotEmpty) ...<Widget>[
+                              const SizedBox(height: 6),
+                              Text(
+                                'Terkirim ke $_deliveryTarget',
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 16),
                             Row(
                               children: <Widget>[
@@ -175,7 +189,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                                       context.showAppSnack('Username disalin.');
                                     },
                                     icon: const Icon(Icons.copy_rounded),
-                                    label: const Text('Copy'),
+                                    label: const Text('Salin'),
                                   ),
                                 ),
                                 const SizedBox(width: 12),

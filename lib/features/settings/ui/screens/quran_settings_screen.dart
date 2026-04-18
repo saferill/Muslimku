@@ -23,7 +23,8 @@ class QuranSettingsScreen extends StatelessWidget {
               children: <Widget>[
                 SwitchListTile(
                   title: const Text('Tampilkan Terjemahan Otomatis'),
-                  subtitle: const Text('Reader menampilkan terjemahan otomatis'),
+                  subtitle:
+                      const Text('Reader menampilkan terjemahan otomatis'),
                   value: state.readerShowTranslation,
                   onChanged: settings.updateReaderShowTranslation,
                 ),
@@ -36,8 +37,8 @@ class QuranSettingsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 ListTile(
                   title: const Text('Skala Font Arab'),
-                  subtitle:
-                      Text('Ukuran saat ini ${(state.readerFontScale * 100).round()}%'),
+                  subtitle: Text(
+                      'Ukuran saat ini ${(state.readerFontScale * 100).round()}%'),
                 ),
                 Slider(
                   value: state.readerFontScale,
@@ -50,6 +51,10 @@ class QuranSettingsScreen extends StatelessWidget {
                 const Text(
                   'Terjemahan',
                   style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Pilihan ini dipakai di reader dan hasil pencarian ketika tersedia.',
                 ),
                 const SizedBox(height: 12),
                 ...AppConstants.translationOptions.map((translation) {

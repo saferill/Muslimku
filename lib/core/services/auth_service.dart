@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../network/api_client.dart';
+import '../network/api_endpoints.dart';
+import '../network/network_exceptions.dart';
 import '../../shared/models/user_model.dart';
 
 enum AuthResultCode {
@@ -28,6 +31,7 @@ class AuthActionResult {
     this.user,
     this.email,
     this.username,
+    this.maskedDestination,
     this.preferences,
   });
 
@@ -37,6 +41,7 @@ class AuthActionResult {
   final UserModel? user;
   final String? email;
   final String? username;
+  final String? maskedDestination;
   final Map<String, dynamic>? preferences;
 }
 
@@ -44,13 +49,16 @@ class AuthService {
   AuthService({
     FirebaseAuth? auth,
     FirebaseFirestore? firestore,
+    ApiClient? apiClient,
   })  : _auth = auth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _apiClient = apiClient ?? ApiClient();
 
   static bool _googleInitialized = false;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
+  final ApiClient _apiClient;
 
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection('users');
@@ -518,9 +526,61 @@ class AuthService {
   }
 
   Future<AuthActionResult> recoverUsername(String recovery) async {
+    final query = recovery.trim();
+    if (query.isEmpty) {
+      return const AuthActionResult(
+        code: AuthResultCode.invalidCredentials,
+        success: false,
+        message: 'Email atau nomor telepon wajib diisi.',
+      );
+    }
+
+    try {
+      final response = await _apiClient.postJson(
+        ApiEndpoints.authFunction('sendUsernameReminder'),
+        body: <String, dynamic>{
+          'recovery': query,
+        },
+      );
+      final success = response['success'] == true;
+      if (success) {
+        final maskedDestination = response['maskedDestination'] as String?;
+        final username = response['username'] as String?;
+        return AuthActionResult(
+          code: AuthResultCode.usernameRecovered,
+          success: true,
+          message: maskedDestination == null || maskedDestination.isEmpty
+              ? 'Username berhasil ditemukan.'
+              : 'Username berhasil dikirim ke $maskedDestination.',
+          username: username,
+          maskedDestination: maskedDestination,
+        );
+      }
+
+      final failureCode = '${response['code'] ?? ''}';
+      final message = response['message'] as String?;
+      if (failureCode == 'user_not_found') {
+        return AuthActionResult(
+          code: AuthResultCode.userNotFound,
+          success: false,
+          message: message ?? 'Akun tidak ditemukan dengan data tersebut.',
+        );
+      }
+      if (failureCode == 'rate_limited') {
+        return AuthActionResult(
+          code: AuthResultCode.networkError,
+          success: false,
+          message: message ?? 'Terlalu banyak permintaan. Coba lagi nanti.',
+        );
+      }
+    } on NetworkException {
+      // Fallback to local lookup when Functions cannot be reached.
+    } catch (_) {
+      // Fallback to local lookup when remote delivery is unavailable.
+    }
+
     try {
       UserModel? user;
-      final query = recovery.trim();
       if (query.contains('@')) {
         user = await _lookupUserByEmail(query.toLowerCase());
       } else {
@@ -542,7 +602,8 @@ class AuthService {
       return AuthActionResult(
         code: AuthResultCode.usernameRecovered,
         success: true,
-        message: 'Username ditemukan: ${user.username}',
+        message:
+            'Username ditemukan di perangkat ini. Sign In dengan username ${user.username}.',
         username: user.username,
         email: user.email,
         user: user,
@@ -802,8 +863,10 @@ class AuthService {
   }
 
   Future<UserModel?> _lookupUserByEmail(String email) async {
-    final snapshot =
-        await _users.where('email', isEqualTo: email.toLowerCase()).limit(1).get();
+    final snapshot = await _users
+        .where('email', isEqualTo: email.toLowerCase())
+        .limit(1)
+        .get();
     if (snapshot.docs.isEmpty) return null;
     return UserModel.fromJson(snapshot.docs.first.data());
   }

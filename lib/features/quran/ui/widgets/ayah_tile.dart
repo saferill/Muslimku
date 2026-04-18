@@ -13,6 +13,7 @@ class AyahTile extends StatelessWidget {
     required this.fontScale,
     required this.showTranslation,
     required this.showTafsir,
+    required this.translationText,
     required this.onBookmark,
     required this.onPlay,
     required this.onCopy,
@@ -29,6 +30,7 @@ class AyahTile extends StatelessWidget {
   final double fontScale;
   final bool showTranslation;
   final bool showTafsir;
+  final String translationText;
   final VoidCallback onBookmark;
   final VoidCallback onPlay;
   final VoidCallback onCopy;
@@ -118,7 +120,7 @@ class AyahTile extends StatelessWidget {
             if (showTranslation) ...<Widget>[
               const SizedBox(height: 14),
               Text(
-                ayah.translation,
+                translationText,
                 style: const TextStyle(
                   height: 1.6,
                   color: AppColors.textSecondary,
@@ -168,12 +170,12 @@ class AyahTile extends StatelessWidget {
               runSpacing: 8,
               children: <Widget>[
                 ActionChip(
-                  label: const Text('Share'),
+                  label: const Text('Bagikan'),
                   avatar: const Icon(Icons.share_rounded, size: 18),
                   onPressed: onShare,
                 ),
                 ActionChip(
-                  label: Text(highlighted ? 'Unhighlight' : 'Highlight'),
+                  label: Text(highlighted ? 'Hapus Sorotan' : 'Sorot'),
                   avatar: Icon(
                     highlighted
                         ? Icons.highlight_remove_rounded
@@ -183,7 +185,9 @@ class AyahTile extends StatelessWidget {
                   onPressed: onHighlight,
                 ),
                 ActionChip(
-                  label: Text(note.trim().isEmpty ? 'Add Note' : 'Edit Note'),
+                  label: Text(
+                    note.trim().isEmpty ? 'Tambah Catatan' : 'Edit Catatan',
+                  ),
                   avatar: const Icon(Icons.edit_note_rounded, size: 18),
                   onPressed: onNote,
                 ),

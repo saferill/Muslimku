@@ -183,7 +183,7 @@ class AudioPlayerCard extends StatelessWidget {
                     ),
                     PopupMenuItem<Duration?>(
                       value: null,
-                      child: Text('Hapus Sleep Timer'),
+                      child: Text('Matikan Timer Tidur'),
                     ),
                   ],
                   child: Container(

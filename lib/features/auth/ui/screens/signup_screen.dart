@@ -75,7 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: <Widget>[
                         AppTextField(
                           controller: _nameController,
-                          label: 'Full Name',
+                          label: 'Nama Lengkap',
                           hint: 'Abdullah Rahman',
                           icon: Icons.person_outline,
                           textInputAction: TextInputAction.next,
@@ -85,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 18),
                         AppTextField(
                           controller: _emailController,
-                          label: 'Email Address',
+                          label: 'Alamat Email',
                           hint: 'name@example.com',
                           icon: Icons.mail_outline,
                           keyboardType: TextInputType.emailAddress,
@@ -117,7 +117,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 18),
                         AppTextField(
                           controller: _confirmController,
-                          label: 'Confirm Password',
+                          label: 'Konfirmasi Password',
                           hint: 'Ulangi password',
                           icon: Icons.verified_user_outlined,
                           obscureText: _obscureConfirmPassword,
@@ -173,7 +173,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           icon: Icons.g_mobiledata_rounded,
                           isSecondary: true,
                           onPressed: () async {
-                            final message = await authController.signInWithGoogle();
+                            final message =
+                                await authController.signInWithGoogle();
                             if (!mounted) return;
                             if (message != null) context.showAppSnack(message);
                             if (!authController.state.isAuthenticated) return;

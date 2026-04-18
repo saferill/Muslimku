@@ -37,7 +37,8 @@ class PrayerTile extends StatelessWidget {
                 : AppColors.surfaceHigh,
             child: Icon(
               prayer.icon,
-              color: prayer.isActive ? AppColors.primary : AppColors.textSecondary,
+              color:
+                  prayer.isActive ? AppColors.primary : AppColors.textSecondary,
             ),
           ),
           const SizedBox(width: 16),
@@ -50,8 +51,9 @@ class PrayerTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: prayer.isActive ? 20 : 18,
                     fontWeight: FontWeight.w800,
-                    color:
-                        prayer.isActive ? AppColors.primary : AppColors.textPrimary,
+                    color: prayer.isActive
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -69,7 +71,7 @@ class PrayerTile extends StatelessWidget {
                 IconButton(
                   onPressed: onTest,
                   icon: const Icon(Icons.volume_up_rounded),
-                  tooltip: 'Test sound',
+                  tooltip: 'Tes suara',
                 ),
               Switch(
                 value: enabled,

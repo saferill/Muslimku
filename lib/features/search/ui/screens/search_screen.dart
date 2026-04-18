@@ -49,12 +49,16 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final dependencies = AppDependenciesScope.of(context);
+    final authState = dependencies.authController.state;
     final quranController = dependencies.quranController;
     final searchController = dependencies.searchController;
 
     return Scaffold(
       body: AnimatedBuilder(
-        animation: Listenable.merge(<Listenable>[quranController, searchController]),
+        animation: Listenable.merge(<Listenable>[
+          quranController,
+          searchController,
+        ]),
         builder: (context, _) {
           return SafeArea(
             child: ListView(
@@ -165,7 +169,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         const SizedBox(height: 12),
                         FilledButton(
-                          onPressed: () => quranController.search(_controller.text),
+                          onPressed: () =>
+                              quranController.search(_controller.text),
                           child: const Text('Coba Lagi'),
                         ),
                       ],
@@ -192,7 +197,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             result.surahNumber,
                           );
                           if (surah == null) return;
-                          await searchController.addRecentSearch(_controller.text);
+                          await searchController.addRecentSearch(
+                            _controller.text,
+                          );
                           if (!context.mounted) return;
                           Navigator.of(context).pushNamed(
                             RouteNames.reader,
@@ -240,9 +247,10 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                               const SizedBox(height: 8),
                               Text(
-                                result.translation ??
-                                    result.tafsirText ??
-                                    result.relevance,
+                                _resultTranslation(
+                                  result,
+                                  authState.translation,
+                                ),
                                 style: const TextStyle(
                                   color: AppColors.textSecondary,
                                   height: 1.5,
@@ -295,7 +303,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     onPressed: () => SharePlus.instance.share(
                                       ShareParams(
                                         text:
-                                            '${result.arabic ?? ''}\n${result.translation ?? result.tafsirText ?? result.relevance}\n${result.surahName} ${result.ayahNumber}',
+                                            '${result.arabic ?? ''}\n${_resultTranslation(result, authState.translation)}\n${result.surahName} ${result.ayahNumber}',
                                       ),
                                     ),
                                   ),
@@ -331,7 +339,8 @@ class _SearchScreenState extends State<SearchScreen> {
         .where((entry) => entry.number == result.ayahNumber)
         .firstOrNull;
     if (ayah == null || !mounted) return;
-    final saved = await quranController.toggleBookmark(surah: surah, ayah: ayah);
+    final saved =
+        await quranController.toggleBookmark(surah: surah, ayah: ayah);
     if (!mounted) return;
     context.showAppSnack(saved ? 'Bookmark disimpan.' : 'Bookmark dihapus.');
   }
@@ -361,6 +370,17 @@ class _SearchScreenState extends State<SearchScreen> {
     );
     if (!mounted) return;
     setState(() => _listening = started);
+  }
+
+  String _resultTranslation(
+    SearchResultModel result,
+    String translationPreference,
+  ) {
+    if (translationPreference == 'English (Muhammad Asad)' &&
+        (result.translationEnglish ?? '').trim().isNotEmpty) {
+      return result.translationEnglish!;
+    }
+    return result.translation ?? result.tafsirText ?? result.relevance;
   }
 }
 

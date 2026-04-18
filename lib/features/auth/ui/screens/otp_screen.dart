@@ -14,7 +14,7 @@ class OtpScreen extends StatelessWidget {
     final authController = AppDependenciesScope.of(context).authController;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Verifikasi')),
+      appBar: AppBar(title: const Text('Verifikasi Email')),
       body: SafeArea(
         child: AnimatedBuilder(
           animation: authController,
@@ -33,7 +33,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Sesi verifikasi tidak ditemukan',
+                      'Sesi verifikasi email tidak ditemukan',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w900,
@@ -92,7 +92,7 @@ class OtpScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 28),
                   const Text(
-                      'Verifikasi email kamu',
+                    'Verifikasi email kamu',
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.w900,
@@ -101,7 +101,7 @@ class OtpScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Kami sudah mengirim link verifikasi ke $email. Buka email itu, klik link verifikasinya, lalu kembali ke aplikasi untuk melanjutkan.',
+                    'Kami sudah mengirim link verifikasi ke $email. Buka email tersebut, ketuk tautan verifikasinya, lalu kembali ke aplikasi untuk melanjutkan.',
                     style: const TextStyle(
                       height: 1.55,
                       fontSize: 16,

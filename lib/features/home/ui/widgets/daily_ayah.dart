@@ -96,14 +96,14 @@ class DailyAyahCard extends StatelessWidget {
                     TextButton.icon(
                       onPressed: onOpen,
                       icon: const Icon(Icons.menu_book_rounded),
-                      label: const Text('Open Reader'),
+                      label: const Text('Buka Reader'),
                     ),
                     const SizedBox(width: 8),
                     if (onShare != null)
                       TextButton.icon(
                         onPressed: onShare,
                         icon: const Icon(Icons.share_rounded),
-                        label: const Text('Share'),
+                        label: const Text('Bagikan'),
                       ),
                   ],
                 ),

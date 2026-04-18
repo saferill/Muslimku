@@ -10,6 +10,7 @@ class ApiEndpoints {
 
   static const equranBaseUrl = 'https://equran.id';
   static const equranApiBaseUrl = 'https://equran.id/api';
+  static const aladhanBaseUrl = 'https://api.aladhan.com/v1';
   static const firebaseFunctionsBaseUrl = String.fromEnvironment(
     'FIREBASE_FUNCTIONS_BASE_URL',
     defaultValue:

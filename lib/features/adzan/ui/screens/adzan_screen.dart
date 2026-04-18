@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
@@ -32,7 +32,8 @@ class AdzanScreen extends StatelessWidget {
 
     return Scaffold(
       body: AnimatedBuilder(
-        animation: Listenable.merge(<Listenable>[authController, adzanController]),
+        animation:
+            Listenable.merge(<Listenable>[authController, adzanController]),
         builder: (context, _) {
           return StreamBuilder<DateTime>(
             stream: Stream<DateTime>.periodic(
@@ -99,8 +100,8 @@ class AdzanScreen extends StatelessWidget {
                       onAutoDetect: () async {
                         final permissionMessage =
                             await authController.enableLocation();
-                        final gpsMessage =
-                            await adzanController.detectAndSyncCurrentLocation();
+                        final gpsMessage = await adzanController
+                            .detectAndSyncCurrentLocation();
                         if (!context.mounted) return;
                         context.showAppSnack(
                           gpsMessage ??
@@ -112,15 +113,41 @@ class AdzanScreen extends StatelessWidget {
                         authController.updateLocation(value);
                         adzanController.syncLocation(value);
                       },
+                      onManualLocationChanged: (value) async {
+                        final message =
+                            await adzanController.syncCustomLocation(
+                          value,
+                        );
+                        authController
+                            .updateLocation(adzanController.locationLabel);
+                        if (!context.mounted || message == null) return;
+                        context.showAppSnack(message);
+                      },
                     ),
                     const SizedBox(height: 16),
                     _SchedulingCard(
                       controller: adzanController,
                       onPreviewRegular: () {
-                        audioController.playAdhanAsset(adzanController.regularSound);
+                        audioController
+                            .playAdhanAsset(adzanController.regularSound)
+                            .then((_) {
+                          if (!context.mounted) return;
+                          context.showAppSnack(
+                            audioController.error ??
+                                'Preview adzan reguler diputar.',
+                          );
+                        });
                       },
                       onPreviewFajr: () {
-                        audioController.playAdhanAsset(adzanController.fajrSound);
+                        audioController
+                            .playAdhanAsset(adzanController.fajrSound)
+                            .then((_) {
+                          if (!context.mounted) return;
+                          context.showAppSnack(
+                            audioController.error ??
+                                'Preview adzan Subuh diputar.',
+                          );
+                        });
                       },
                     ),
                     const SizedBox(height: 16),
@@ -130,13 +157,19 @@ class AdzanScreen extends StatelessWidget {
                         child: PrayerTile(
                           prayer: prayer,
                           enabled: adzanController.prayerEnabled(prayer.name),
-                          onToggle: (value) =>
-                              adzanController.setPrayerEnabled(prayer.name, value),
+                          onToggle: (value) => adzanController.setPrayerEnabled(
+                              prayer.name, value),
                           onTest: () {
                             final sound = prayer.name == 'Subuh'
                                 ? adzanController.fajrSound
                                 : adzanController.regularSound;
-                            audioController.playAdhanAsset(sound);
+                            audioController.playAdhanAsset(sound).then((_) {
+                              if (!context.mounted) return;
+                              context.showAppSnack(
+                                audioController.error ??
+                                    'Preview ${prayer.name} diputar.',
+                              );
+                            });
                           },
                         ),
                       ),
@@ -171,16 +204,31 @@ class AdzanScreen extends StatelessWidget {
   }
 }
 
-class _LocationCard extends StatelessWidget {
+class _LocationCard extends StatefulWidget {
   const _LocationCard({
     required this.currentLocation,
     required this.onAutoDetect,
     required this.onLocationChanged,
+    required this.onManualLocationChanged,
   });
 
   final String currentLocation;
   final Future<void> Function() onAutoDetect;
   final ValueChanged<String> onLocationChanged;
+  final Future<void> Function(String) onManualLocationChanged;
+
+  @override
+  State<_LocationCard> createState() => _LocationCardState();
+}
+
+class _LocationCardState extends State<_LocationCard> {
+  final TextEditingController _manualController = TextEditingController();
+
+  @override
+  void dispose() {
+    _manualController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,9 +252,9 @@ class _LocationCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           DropdownButtonFormField<String>(
-            initialValue: currentLocation,
+            initialValue: widget.currentLocation,
             decoration: const InputDecoration(
-              labelText: 'Lokasi Manual',
+              labelText: 'Pilih kota preset',
               prefixIcon: Icon(Icons.location_on_outlined),
             ),
             items: AppConstants.popularLocations
@@ -219,12 +267,40 @@ class _LocationCard extends StatelessWidget {
                 .toList(),
             onChanged: (value) {
               if (value == null) return;
-              onLocationChanged(value);
+              widget.onLocationChanged(value);
             },
           ),
           const SizedBox(height: 12),
+          TextField(
+            controller: _manualController,
+            textInputAction: TextInputAction.search,
+            decoration: const InputDecoration(
+              labelText: 'Cari kota, alamat, atau koordinat',
+              hintText: 'Contoh: Solo / -7.566, 110.816',
+              prefixIcon: Icon(Icons.travel_explore_rounded),
+            ),
+            onSubmitted: (value) {
+              final normalized = value.trim();
+              if (normalized.isEmpty) return;
+              widget.onManualLocationChanged(normalized);
+            },
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                final normalized = _manualController.text.trim();
+                if (normalized.isEmpty) return;
+                widget.onManualLocationChanged(normalized);
+              },
+              icon: const Icon(Icons.search_rounded),
+              label: const Text('Gunakan hasil pencarian manual'),
+            ),
+          ),
+          const SizedBox(height: 12),
           OutlinedButton.icon(
-            onPressed: onAutoDetect,
+            onPressed: widget.onAutoDetect,
             icon: const Icon(Icons.my_location_rounded),
             label: const Text('Deteksi Otomatis'),
           ),
@@ -354,10 +430,11 @@ class _SchedulingCard extends StatelessWidget {
             max: 30,
             divisions: 6,
             label: '${controller.preReminderMinutes}',
-            onChanged: (value) => controller.setPreReminderMinutes(value.round()),
+            onChanged: (value) =>
+                controller.setPreReminderMinutes(value.round()),
           ),
           Text(
-            'Preview volume ${(controller.volume * 100).round()}%',
+            'Volume tes ${(controller.volume * 100).round()}%',
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
           Slider(
@@ -398,7 +475,7 @@ class _QiblaCompassCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Text(
-                'QIBLA REALTIME',
+                'KIBLAT REALTIME',
                 style: TextStyle(
                   color: Colors.white70,
                   fontWeight: FontWeight.w700,
@@ -463,5 +540,3 @@ class _QiblaCompassCard extends StatelessWidget {
     );
   }
 }
-
-

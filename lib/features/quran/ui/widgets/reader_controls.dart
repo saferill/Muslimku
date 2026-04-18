@@ -36,14 +36,14 @@ class ReaderControls extends StatelessWidget {
             children: <Widget>[
               const Expanded(
                 child: Text(
-                  'Reader Controls',
+                  'Kontrol Reader',
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
               TextButton.icon(
                 onPressed: onPlayAll,
                 icon: const Icon(Icons.play_circle_fill_rounded),
-                label: const Text('Play All'),
+                label: const Text('Putar Semua'),
               ),
             ],
           ),
@@ -52,20 +52,20 @@ class ReaderControls extends StatelessWidget {
             value: showTranslation,
             onChanged: onToggleTranslation,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Show Translation'),
+            title: const Text('Tampilkan Terjemahan'),
           ),
           SwitchListTile(
             value: showTafsir,
             onChanged: onToggleTafsir,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Show Tafsir'),
+            title: const Text('Tampilkan Tafsir'),
           ),
           const SizedBox(height: 6),
           Row(
             children: <Widget>[
               const Icon(Icons.format_size_rounded, color: AppColors.primary),
               const SizedBox(width: 10),
-              const Text('Arabic Font'),
+              const Text('Ukuran Font Arab'),
               Expanded(
                 child: Slider(
                   value: fontScale,

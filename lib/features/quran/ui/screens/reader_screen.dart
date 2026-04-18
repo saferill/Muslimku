@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/utils/helpers.dart';
 import '../../../../di/injection.dart';
+import '../../data/models/ayah_model.dart';
 import '../../data/models/surah_model.dart';
 import '../widgets/ayah_tile.dart';
 import '../widgets/reader_controls.dart';
@@ -42,6 +43,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   Widget build(BuildContext context) {
     final dependencies = AppDependenciesScope.of(context);
     final authController = dependencies.authController;
+    final authState = authController.state;
     final quranController = dependencies.quranController;
     final audioController = dependencies.audioController;
     final current = widget.surah ??
@@ -60,7 +62,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         current == null ? const [] : quranController.ayahsFor(current.number);
 
     return Scaffold(
-      appBar: AppBar(title: Text(current?.name ?? 'Reader')),
+      appBar: AppBar(title: Text(current?.name ?? 'Reader Qur\'an')),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
@@ -100,7 +102,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ? null
                         : () =>
                             quranController.ensureSurahLoaded(current.number),
-                    child: const Text('Retry'),
+                    child: const Text('Coba Lagi'),
                   ),
                 ],
               )
@@ -121,6 +123,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
                     fontScale: _fontScale,
                     showTranslation: _showTranslation,
                     showTafsir: _showTafsir,
+                    translationText:
+                        _translationForAyah(ayah, authState.translation),
                     onBookmark: current == null
                         ? () {}
                         : () => quranController.toggleBookmark(
@@ -138,7 +142,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       await Clipboard.setData(
                         ClipboardData(
                           text:
-                              '${ayah.arabic}\n${ayah.translation}\n(${ayah.verseKey})',
+                              '${ayah.arabic}\n${_translationForAyah(ayah, authState.translation)}\n(${ayah.verseKey})',
                         ),
                       );
                       if (!context.mounted) return;
@@ -148,7 +152,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       await SharePlus.instance.share(
                         ShareParams(
                           text:
-                              '${ayah.arabic}\n${ayah.translation}\n${current?.name ?? ayah.surahName} ${ayah.number} (${ayah.verseKey})',
+                              '${ayah.arabic}\n${_translationForAyah(ayah, authState.translation)}\n${current?.name ?? ayah.surahName} ${ayah.number} (${ayah.verseKey})',
                         ),
                       );
                     },
@@ -204,7 +208,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Ayah Note'),
+          title: const Text('Catatan Ayat'),
           content: TextField(
             controller: controller,
             maxLines: 4,
@@ -215,15 +219,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(''),
-              child: const Text('Remove'),
+              child: const Text('Hapus'),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(controller.text),
-              child: const Text('Save'),
+              child: const Text('Simpan'),
             ),
           ],
         );
@@ -231,5 +235,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
     );
     controller.dispose();
     return result;
+  }
+
+  String _translationForAyah(AyahModel ayah, String translationPreference) {
+    if (translationPreference == 'English (Muhammad Asad)' &&
+        (ayah.translationEnglish ?? '').trim().isNotEmpty) {
+      return ayah.translationEnglish!;
+    }
+    return ayah.translation;
   }
 }

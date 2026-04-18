@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
 import '../../../../di/injection.dart';
@@ -27,12 +27,12 @@ class AuthDecisionScreen extends StatelessWidget {
             return AlertDialog(
               title: const Text('Sesi Berakhir'),
               content: const Text(
-                'Sesi login kamu sudah berakhir. Mau login lagi atau lanjut sebagai guest?',
+                'Sesi login kamu sudah berakhir. Mau Sign In lagi atau lanjut sebagai tamu?',
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Guest'),
+                  child: const Text('Mode Tamu'),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -83,13 +83,15 @@ class AuthDecisionScreen extends StatelessWidget {
               const Spacer(),
               PrimaryButton(
                 label: 'Sign Up',
-                onPressed: () => Navigator.of(context).pushNamed(RouteNames.signup),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(RouteNames.signup),
               ),
               const SizedBox(height: 14),
               PrimaryButton(
                 label: 'Sign In',
                 isSecondary: true,
-                onPressed: () => Navigator.of(context).pushNamed(RouteNames.login),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(RouteNames.login),
               ),
               const SizedBox(height: 14),
               PrimaryButton(
@@ -115,13 +117,13 @@ class AuthDecisionScreen extends StatelessWidget {
                 spacing: 8,
                 children: <Widget>[
                   TextButton(
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed(RouteNames.forgotPassword),
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(RouteNames.forgotPassword),
                     child: const Text('Lupa Password'),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed(RouteNames.forgotUsername),
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(RouteNames.forgotUsername),
                     child: const Text('Lupa Username'),
                   ),
                 ],
@@ -148,5 +150,3 @@ class AuthDecisionScreen extends StatelessWidget {
     );
   }
 }
-
-

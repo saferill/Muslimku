@@ -49,11 +49,30 @@ class AudioSettingsScreen extends StatelessWidget {
                         context.showAppSnack('Qari default diperbarui.');
                       },
                     ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          await audio.previewReciter(audio.currentReciter);
+                          if (!context.mounted) return;
+                          if ((audio.error ?? '').isNotEmpty) {
+                            context.showAppSnack(audio.error!);
+                            return;
+                          }
+                          context.showAppSnack(
+                            'Preview qari ${audio.currentReciter} diputar.',
+                          );
+                        },
+                        icon: const Icon(Icons.play_arrow_rounded),
+                        label: const Text('Tes Qari'),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Playback',
+                  title: 'Pemutaran',
                   children: <Widget>[
                     SwitchListTile.adaptive(
                       title: const Text('Shuffle'),
@@ -69,9 +88,10 @@ class AudioSettingsScreen extends StatelessWidget {
                       onChanged: audio.setRepeatEnabled,
                     ),
                     ListTile(
-                      title: const Text('Kecepatan Playback'),
+                      title: const Text('Kecepatan Pemutaran'),
                       subtitle: Text(
-                          '${audio.speed.toStringAsFixed(2)}x default speed'),
+                        '${audio.speed.toStringAsFixed(2)}x kecepatan pemutaran',
+                      ),
                     ),
                     Slider(
                       value: audio.speed,
@@ -85,7 +105,7 @@ class AudioSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Downloads',
+                  title: 'Unduhan',
                   children: <Widget>[
                     ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -96,16 +116,9 @@ class AudioSettingsScreen extends StatelessWidget {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Kualitas Audio'),
+                      title: const Text('Penyimpanan Lokal'),
                       subtitle: const Text(
-                        'Saat ini mengikuti kualitas dari API yang tersedia.',
-                      ),
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Strategi Unduhan'),
-                      subtitle: const Text(
-                        'Unduhan disimpan lokal di perangkat ini dan tidak ikut cloud sync.',
+                        'Unduhan audio disimpan lokal di perangkat ini dan tidak ikut sinkronisasi cloud.',
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -125,11 +138,11 @@ class AudioSettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _section(
-                  title: 'Playlist',
+                  title: 'Daftar Putar',
                   children: <Widget>[
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Item Playlist'),
+                      title: const Text('Item Daftar Putar'),
                       subtitle: Text(
                           '${audio.playlistSurahs.length} surah tersimpan'),
                     ),

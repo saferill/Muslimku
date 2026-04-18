@@ -47,7 +47,7 @@ class AboutScreen extends StatelessWidget {
             _card(
               title: 'Kebijakan Privasi',
               body:
-                  'Data guest tetap lokal. Saat login, bookmark, last read, dan preferensi penting dapat disinkronkan ke cloud akunmu.',
+                  'Data mode tamu tetap lokal. Saat login, bookmark, last read, dan preferensi penting dapat disinkronkan ke cloud akunmu.',
             ),
             const SizedBox(height: 12),
             _card(

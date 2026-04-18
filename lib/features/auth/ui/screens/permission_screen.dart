@@ -95,11 +95,37 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceLow,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: const Column(
+                            children: <Widget>[
+                              _PermissionReasonRow(
+                                icon: Icons.schedule_rounded,
+                                title: 'Jadwal lebih akurat',
+                                subtitle:
+                                    'Lokasi membantu Muslimku menghitung waktu salat sesuai tempatmu berada.',
+                              ),
+                              SizedBox(height: 12),
+                              _PermissionReasonRow(
+                                icon: Icons.alarm_rounded,
+                                title: 'Pengingat tetap berjalan',
+                                subtitle:
+                                    'Notifikasi dipakai untuk adzan, reminder awal, dan refleksi ayat harian.',
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         PrimaryButton(
                           label: 'Aktifkan Lokasi',
                           icon: Icons.near_me_outlined,
                           onPressed: () async {
-                            final message = await authController.enableLocation();
+                            final message =
+                                await authController.enableLocation();
                             if (context.mounted && message != null) {
                               context.showAppSnack(message);
                             }
@@ -173,6 +199,59 @@ class _PermissionMiniCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PermissionReasonRow extends StatelessWidget {
+  const _PermissionReasonRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          width: 42,
+          height: 42,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(icon, color: AppColors.primary),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  height: 1.45,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/colors.dart';
@@ -14,13 +14,13 @@ class AudioScreen extends StatelessWidget {
     final controller = AppDependenciesScope.of(context).audioController;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Audio Quran')),
+      appBar: AppBar(title: const Text('Audio Qur\'an')),
       body: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
           final currentSurah = controller.currentSurah;
           final sleepLabel = controller.sleepTimerRemainingSeconds == null
-              ? 'Sleep timer mati'
+              ? 'Timer tidur mati'
               : 'Tidur dalam ${controller.sleepTimerRemainingSeconds! ~/ 60}:${(controller.sleepTimerRemainingSeconds! % 60).toString().padLeft(2, '0')}';
 
           return Container(
@@ -115,7 +115,7 @@ class AudioScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _MiniAudioTile(
                           title: surah.name,
-                          subtitle: 'Playlist item',
+                          subtitle: 'Tersimpan di playlist',
                           trailingIcon: Icons.remove_circle_outline_rounded,
                           onTap: () =>
                               controller.playSurah(surahNumber: surah.number),
@@ -128,7 +128,7 @@ class AudioScreen extends StatelessWidget {
                   ],
                   if (controller.downloadedSurahs.isNotEmpty) ...<Widget>[
                     const Text(
-                    'UNDUHAN OFFLINE',
+                      'UNDUHAN LOKAL',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
@@ -323,4 +323,3 @@ class _MiniAudioTile extends StatelessWidget {
     );
   }
 }
-

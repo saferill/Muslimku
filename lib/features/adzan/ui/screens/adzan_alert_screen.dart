@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/colors.dart';
+import '../../../../core/utils/helpers.dart';
 import '../../../../di/injection.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
 
-class AdzanAlertScreen extends StatelessWidget {
+class AdzanAlertScreen extends StatefulWidget {
   const AdzanAlertScreen({
     super.key,
     this.payload,
@@ -13,11 +14,19 @@ class AdzanAlertScreen extends StatelessWidget {
   final String? payload;
 
   @override
+  State<AdzanAlertScreen> createState() => _AdzanAlertScreenState();
+}
+
+class _AdzanAlertScreenState extends State<AdzanAlertScreen> {
+  bool _muted = false;
+
+  @override
   Widget build(BuildContext context) {
     final dependencies = AppDependenciesScope.of(context);
-    final prayerName = _prayerNameFromPayload(payload);
+    final prayerName = _prayerNameFromPayload(widget.payload);
     final location = dependencies.authController.state.currentLocation;
     final timeLabel = TimeOfDay.now().format(context);
+    final isReminder = (widget.payload ?? '').startsWith('reminder:');
 
     return Scaffold(
       body: Container(
@@ -38,9 +47,7 @@ class AdzanAlertScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 32),
                 Text(
-                  (payload ?? '').startsWith('reminder:')
-                      ? 'PRAYER REMINDER'
-                      : 'NOW CALLING TO PRAYER',
+                  isReminder ? 'PENGINGAT SALAT' : 'WAKTU ADZAN',
                   style: const TextStyle(
                     color: AppColors.tertiarySoft,
                     fontSize: 12,
@@ -69,7 +76,7 @@ class AdzanAlertScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    '$location - $timeLabel',
+                    '$location • $timeLabel',
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.85),
                       fontWeight: FontWeight.w600,
@@ -88,8 +95,10 @@ class AdzanAlertScreen extends StatelessWidget {
                       width: 2,
                     ),
                   ),
-                  child: const Icon(
-                    Icons.notifications_active_rounded,
+                  child: Icon(
+                    _muted
+                        ? Icons.volume_off_rounded
+                        : Icons.notifications_active_rounded,
                     color: AppColors.primarySoft,
                     size: 54,
                   ),
@@ -97,8 +106,8 @@ class AdzanAlertScreen extends StatelessWidget {
                 const SizedBox(height: 28),
                 Text(
                   prayerName == 'Subuh'
-                      ? '"Prayer is better than sleep."'
-                      : '"Come to prayer, come to success."',
+                      ? '"Salat lebih baik daripada tidur."'
+                      : '"Mari menuju salat, mari menuju kemenangan."',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
@@ -109,7 +118,9 @@ class AdzanAlertScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Take a moment to reconnect with the Divine and find peace in your heart.',
+                  _muted
+                      ? 'Suara adzan sudah dibisukan. Kamu masih bisa membuka aplikasi atau menunda pengingat.'
+                      : 'Ambil jeda sejenak untuk kembali menenangkan hati dan menyiapkan diri menuju salat.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.75),
@@ -119,7 +130,7 @@ class AdzanAlertScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 PrimaryButton(
-                  label: 'Snooze for 5 mins',
+                  label: 'Tunda 5 Menit',
                   icon: Icons.snooze_rounded,
                   onPressed: () async {
                     await dependencies.adzanController.stopActiveAlert();
@@ -135,20 +146,26 @@ class AdzanAlertScreen extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: PrimaryButton(
-                        label: 'Mute',
+                        label: _muted ? 'Sudah Dibisukan' : 'Bisukan',
                         isSecondary: true,
                         icon: Icons.volume_off_rounded,
-                        onPressed: () async {
-                          await dependencies.adzanController.stopActiveAlert();
-                          if (!context.mounted) return;
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: _muted
+                            ? null
+                            : () async {
+                                await dependencies.adzanController
+                                    .stopActiveAlert();
+                                if (!mounted) return;
+                                setState(() => _muted = true);
+                                context.showAppSnack(
+                                  'Suara adzan dibisukan untuk alert ini.',
+                                );
+                              },
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: PrimaryButton(
-                        label: 'Stop',
+                        label: 'Berhenti',
                         isSecondary: true,
                         icon: Icons.stop_circle_outlined,
                         onPressed: () async {
@@ -162,17 +179,17 @@ class AdzanAlertScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 PrimaryButton(
-                  label: 'Open App',
+                  label: 'Buka Aplikasi',
                   isSecondary: true,
                   icon: Icons.open_in_new_rounded,
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Swipe up to dismiss',
+                  'Geser ke atas untuk menutup layar ini',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.5),
-                    letterSpacing: 1.6,
+                    letterSpacing: 1.2,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -186,9 +203,9 @@ class AdzanAlertScreen extends StatelessWidget {
   }
 
   String _prayerNameFromPayload(String? value) {
-    if ((value ?? '').isEmpty) return 'Prayer Time';
+    if ((value ?? '').isEmpty) return 'Waktu Salat';
     final parts = value!.split(':');
-    if (parts.length < 2) return 'Prayer Time';
+    if (parts.length < 2) return 'Waktu Salat';
     return parts[1];
   }
 }

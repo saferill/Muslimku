@@ -68,13 +68,39 @@ class SecurityController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> disablePin() async {
+  Future<bool> verifyPin(String pin) async {
+    final savedPin = await _secureStorage.read(_pinCodeSecureKey);
+    return savedPin != null && savedPin == pin.trim();
+  }
+
+  Future<bool> changePin({
+    required String currentPin,
+    required String newPin,
+  }) async {
+    final normalizedNewPin = newPin.trim();
+    if (normalizedNewPin.length < 4) return false;
+    final validCurrent = await verifyPin(currentPin);
+    if (!validCurrent) return false;
+    await _secureStorage.write(_pinCodeSecureKey, normalizedNewPin);
+    _pinEnabled = true;
+    _locked = false;
+    await _persist();
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> disablePin({
+    required String currentPin,
+  }) async {
+    final validCurrent = await verifyPin(currentPin);
+    if (!validCurrent) return false;
     await _secureStorage.delete(_pinCodeSecureKey);
     _pinEnabled = false;
     _biometricsEnabled = false;
     _locked = false;
     await _persist();
     notifyListeners();
+    return true;
   }
 
   Future<void> setBiometricsEnabled(bool value) async {
@@ -91,8 +117,7 @@ class SecurityController extends ChangeNotifier {
   }
 
   Future<bool> unlockWithPin(String pin) async {
-    final savedPin = await _secureStorage.read(_pinCodeSecureKey);
-    final success = savedPin != null && savedPin == pin.trim();
+    final success = await verifyPin(pin);
     if (success) {
       _locked = false;
       notifyListeners();

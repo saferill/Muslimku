@@ -2,7 +2,8 @@ class RouteNames {
   static const bootstrap = '/';
   static const login = '/login';
   static const signup = '/signup';
-  static const otp = '/otp';
+  static const verifyEmail = '/verify-email';
+  static const otp = verifyEmail;
   static const forgotPassword = '/forgot-password';
   static const forgotUsername = '/forgot-username';
   static const resetPassword = '/reset-password';

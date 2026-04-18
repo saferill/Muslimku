@@ -21,6 +21,15 @@ class AppConstants {
     'Banjarmasin, Indonesia',
     'Banda Aceh, Indonesia',
     'Kuala Lumpur, Malaysia',
+    'Singapore',
+    'Dubai, Uni Emirat Arab',
+    'Doha, Qatar',
+    'Istanbul, Turki',
+    'Cairo, Mesir',
+    'London, Inggris',
+    'New York, Amerika Serikat',
+    'Tokyo, Jepang',
+    'Sydney, Australia',
     'Makkah, Arab Saudi',
   ];
 

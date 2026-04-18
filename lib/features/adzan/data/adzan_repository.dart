@@ -2,14 +2,19 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'adzan_api.dart';
 import 'models/prayer_time_model.dart';
 
 class AdzanRepository {
-  const AdzanRepository();
+  AdzanRepository({AdzanApi? api}) : _api = api;
 
   static const double _sunAltitude = 0.833;
   static const double _makkahLat = 21.4225;
   static const double _makkahLng = 39.8262;
+
+  final AdzanApi? _api;
+  final Map<String, List<PrayerTimeModel>> _remotePrayerCache =
+      <String, List<PrayerTimeModel>>{};
 
   PrayerSnapshotModel buildSnapshot({
     required String locationLabel,
@@ -33,12 +38,21 @@ class AdzanRepository {
       shiftedLocationNow.millisecond,
       shiftedLocationNow.microsecond,
     );
-    final prayers = _calculatePrayerTimes(
-      location,
-      locationNow,
+    final cacheKey = _cacheKey(
+      location: location,
+      locationDate: locationNow,
       calculationMethod: calculationMethod,
       madhab: madhab,
     );
+    final cachedPrayers = _remotePrayerCache[cacheKey];
+    final prayers = cachedPrayers == null
+        ? _calculatePrayerTimes(
+            location,
+            locationNow,
+            calculationMethod: calculationMethod,
+            madhab: madhab,
+          )
+        : _resolveActivePrayer(cachedPrayers, locationNow);
     final nextPrayer = _resolveNextPrayer(prayers, locationNow);
     final qiblaBearing = _calculateQiblaBearing(location);
     final distance = _calculateDistanceToMakkah(location);
@@ -52,6 +66,53 @@ class AdzanRepository {
       qiblaBearing: qiblaBearing,
       distanceToMakkahKm: distance,
     );
+  }
+
+  Future<void> primeRemoteSnapshot({
+    required String locationLabel,
+    required DateTime nowUtc,
+    String calculationMethod = 'Muslim World League',
+    String madhab = 'Shafi\'i',
+    PrayerLocationModel? locationOverride,
+  }) async {
+    final api = _api;
+    if (api == null) return;
+
+    final location =
+        locationOverride ?? PrayerLocationModel.byLabel(locationLabel);
+    final shiftedLocationNow = nowUtc.add(
+      Duration(minutes: (location.utcOffsetHours * 60).round()),
+    );
+    final locationDate = DateTime(
+      shiftedLocationNow.year,
+      shiftedLocationNow.month,
+      shiftedLocationNow.day,
+    );
+    final cacheKey = _cacheKey(
+      location: location,
+      locationDate: locationDate,
+      calculationMethod: calculationMethod,
+      madhab: madhab,
+    );
+    if (_remotePrayerCache.containsKey(cacheKey)) return;
+
+    try {
+      final response = await api.fetchDailyTimings(
+        location: location,
+        locationDate: locationDate,
+        calculationMethod: calculationMethod,
+        madhab: madhab,
+      );
+      final prayers = _prayersFromRemoteResponse(
+        locationDate: locationDate,
+        response: response,
+      );
+      if (prayers.length == 5) {
+        _remotePrayerCache[cacheKey] = prayers;
+      }
+    } catch (_) {
+      // Keep using local fallback calculation if remote timings fail.
+    }
   }
 
   List<PrayerTimeModel> _calculatePrayerTimes(
@@ -82,57 +143,41 @@ class AdzanRepository {
       shadowFactor: asrShadowFactor,
     );
 
-    final items = <PrayerTimeModel>[
-      PrayerTimeModel(
-        name: 'Subuh',
-        time: _dateWithHourValue(date, dhuhrHour - fajrDelta),
-        icon: Icons.nights_stay_outlined,
-        isActive: false,
-      ),
-      PrayerTimeModel(
-        name: 'Zuhur',
-        time: _dateWithHourValue(date, dhuhrHour),
-        icon: Icons.wb_sunny_outlined,
-        isActive: false,
-      ),
-      PrayerTimeModel(
-        name: 'Asar',
-        time: _dateWithHourValue(date, dhuhrHour + asrDelta),
-        icon: Icons.sunny,
-        isActive: false,
-      ),
-      PrayerTimeModel(
-        name: 'Magrib',
-        time: _dateWithHourValue(date, dhuhrHour + sunriseDelta),
-        icon: Icons.wb_twilight_outlined,
-        isActive: false,
-      ),
-      PrayerTimeModel(
-        name: 'Isya',
-        time: _dateWithHourValue(date, dhuhrHour + ishaDelta),
-        icon: Icons.bedtime_outlined,
-        isActive: false,
-      ),
-    ];
-
-    PrayerTimeModel? active;
-    for (final prayer in items) {
-      if (prayer.time.isAfter(locationNow)) {
-        active = prayer;
-        break;
-      }
-    }
-
-    return items
-        .map(
-          (prayer) => PrayerTimeModel(
-            name: prayer.name,
-            time: prayer.time,
-            icon: prayer.icon,
-            isActive: active?.name == prayer.name,
-          ),
-        )
-        .toList();
+    return _resolveActivePrayer(
+      <PrayerTimeModel>[
+        PrayerTimeModel(
+          name: 'Subuh',
+          time: _dateWithHourValue(date, dhuhrHour - fajrDelta),
+          icon: Icons.nights_stay_outlined,
+          isActive: false,
+        ),
+        PrayerTimeModel(
+          name: 'Zuhur',
+          time: _dateWithHourValue(date, dhuhrHour),
+          icon: Icons.wb_sunny_outlined,
+          isActive: false,
+        ),
+        PrayerTimeModel(
+          name: 'Asar',
+          time: _dateWithHourValue(date, dhuhrHour + asrDelta),
+          icon: Icons.sunny,
+          isActive: false,
+        ),
+        PrayerTimeModel(
+          name: 'Magrib',
+          time: _dateWithHourValue(date, dhuhrHour + sunriseDelta),
+          icon: Icons.wb_twilight_outlined,
+          isActive: false,
+        ),
+        PrayerTimeModel(
+          name: 'Isya',
+          time: _dateWithHourValue(date, dhuhrHour + ishaDelta),
+          icon: Icons.bedtime_outlined,
+          isActive: false,
+        ),
+      ],
+      locationNow,
+    );
   }
 
   PrayerTimeModel _resolveNextPrayer(
@@ -149,6 +194,107 @@ class AdzanRepository {
       icon: first.icon,
       isActive: true,
     );
+  }
+
+  List<PrayerTimeModel> _resolveActivePrayer(
+    List<PrayerTimeModel> prayers,
+    DateTime locationNow,
+  ) {
+    PrayerTimeModel? active;
+    for (final prayer in prayers) {
+      if (prayer.time.isAfter(locationNow)) {
+        active = prayer;
+        break;
+      }
+    }
+
+    return prayers
+        .map(
+          (prayer) => PrayerTimeModel(
+            name: prayer.name,
+            time: prayer.time,
+            icon: prayer.icon,
+            isActive: active?.name == prayer.name,
+          ),
+        )
+        .toList();
+  }
+
+  List<PrayerTimeModel> _prayersFromRemoteResponse({
+    required DateTime locationDate,
+    required Map<String, dynamic> response,
+  }) {
+    final data = Map<String, dynamic>.from(
+      response['data'] as Map? ?? const <String, dynamic>{},
+    );
+    final timings = Map<String, dynamic>.from(
+      data['timings'] as Map? ?? const <String, dynamic>{},
+    );
+    return <PrayerTimeModel>[
+      PrayerTimeModel(
+        name: 'Subuh',
+        time: _parseRemoteTime(locationDate, timings['Fajr']),
+        icon: Icons.nights_stay_outlined,
+        isActive: false,
+      ),
+      PrayerTimeModel(
+        name: 'Zuhur',
+        time: _parseRemoteTime(locationDate, timings['Dhuhr']),
+        icon: Icons.wb_sunny_outlined,
+        isActive: false,
+      ),
+      PrayerTimeModel(
+        name: 'Asar',
+        time: _parseRemoteTime(locationDate, timings['Asr']),
+        icon: Icons.sunny,
+        isActive: false,
+      ),
+      PrayerTimeModel(
+        name: 'Magrib',
+        time: _parseRemoteTime(locationDate, timings['Maghrib']),
+        icon: Icons.wb_twilight_outlined,
+        isActive: false,
+      ),
+      PrayerTimeModel(
+        name: 'Isya',
+        time: _parseRemoteTime(locationDate, timings['Isha']),
+        icon: Icons.bedtime_outlined,
+        isActive: false,
+      ),
+    ];
+  }
+
+  DateTime _parseRemoteTime(DateTime locationDate, Object? rawValue) {
+    final raw = '$rawValue'.trim();
+    final normalized = raw.split(' ').first.split('(').first.trim();
+    final parts = normalized.split(':');
+    final hour = int.tryParse(parts.firstOrNull ?? '') ?? 0;
+    final minute = int.tryParse(parts.length > 1 ? parts[1] : '') ?? 0;
+    return DateTime(
+      locationDate.year,
+      locationDate.month,
+      locationDate.day,
+      hour,
+      minute,
+    );
+  }
+
+  String _cacheKey({
+    required PrayerLocationModel location,
+    required DateTime locationDate,
+    required String calculationMethod,
+    required String madhab,
+  }) {
+    return [
+      location.label,
+      location.latitude.toStringAsFixed(4),
+      location.longitude.toStringAsFixed(4),
+      locationDate.year,
+      locationDate.month,
+      locationDate.day,
+      calculationMethod,
+      madhab,
+    ].join('|');
   }
 
   int _dayOfYear(DateTime date) {
@@ -283,4 +429,8 @@ class _MethodProfile {
   final double ishaAngle;
   final bool usesFixedIshaMinutes;
   final int ishaMinutesAfterMaghrib;
+}
+
+extension _FirstOrNullExtension<T> on List<T> {
+  T? get firstOrNull => isEmpty ? null : first;
 }

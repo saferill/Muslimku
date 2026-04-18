@@ -102,7 +102,7 @@ class _AppLockBoundaryState extends State<AppLockBoundary>
                             maxLength: 6,
                             textAlign: TextAlign.center,
                             decoration: const InputDecoration(
-                              labelText: 'Security PIN',
+                              labelText: 'PIN Keamanan',
                               counterText: '',
                             ),
                             onSubmitted: (_) => _unlockWithPin(context),
@@ -124,7 +124,7 @@ class _AppLockBoundaryState extends State<AppLockBoundary>
                                 if (!context.mounted) return;
                                 if (!success) {
                                   context.showAppSnack(
-                                    'Biometric unlock belum berhasil.',
+                                    'Buka kunci biometrik belum berhasil.',
                                   );
                                 }
                               },
