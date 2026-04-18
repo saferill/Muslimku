@@ -93,7 +93,7 @@ class SettingsScreen extends StatelessWidget {
                   children: <Widget>[
                     SettingsTile(
                       icon: Icons.person_outline_rounded,
-                      title: state.isGuest ? 'Login / Daftar' : 'Edit Profil',
+                      title: state.isGuest ? 'Sign In / Sign Up' : 'Edit Profil',
                       subtitle: state.isGuest
                           ? 'Masuk untuk sinkronisasi cloud dan multi-device'
                           : state.user.email,
@@ -327,7 +327,7 @@ class SettingsScreen extends StatelessWidget {
                     onPressed: () =>
                         Navigator.of(context).pushNamed(RouteNames.login),
                     icon: const Icon(Icons.login_rounded),
-                    label: const Text('Login untuk Sinkronisasi'),
+                    label: const Text('Sign In untuk Sinkronisasi'),
                   )
                 else
                   OutlinedButton.icon(
@@ -742,7 +742,7 @@ Hasil aktual:
                 _FaqEntry(
                   question: 'Kenapa bookmark guest tidak sync?',
                   answer:
-                      'Mode guest hanya menyimpan data lokal di perangkat. Login diperlukan untuk sinkronisasi cloud.',
+                      'Mode guest hanya menyimpan data lokal di perangkat. Sign In diperlukan untuk sinkronisasi cloud.',
                 ),
                 _FaqEntry(
                   question: 'Bagaimana mengaktifkan adzan lokal?',

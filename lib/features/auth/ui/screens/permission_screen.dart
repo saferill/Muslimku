@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/colors.dart';
 import '../../../../core/utils/helpers.dart';
 import '../../../../di/injection.dart';
+import '../../../../shared/widgets/brand/muslimku_logo.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
 import '../../../../shared/widgets/cards/glass_card.dart';
 
@@ -49,13 +50,9 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const <Widget>[
-                      Text(
-                        'Muslimku',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.primary,
-                        ),
+                      MuslimkuBrand(
+                        logoSize: 34,
+                        textSize: 24,
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.white70,
@@ -94,7 +91,7 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
                         const Text(
-                          'To provide accurate prayer times and qibla direction, Muslimku requires your location and notification access.',
+                          'Untuk memberikan jadwal salat dan arah kiblat yang akurat, Muslimku memerlukan akses lokasi dan notifikasi.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -104,7 +101,7 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         PrimaryButton(
-                          label: 'Enable Location',
+                          label: 'Aktifkan Lokasi',
                           icon: Icons.near_me_outlined,
                           onPressed: () async {
                             final message = await authController.enableLocation();
@@ -115,7 +112,7 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         PrimaryButton(
-                          label: 'Enable Notifications',
+                          label: 'Aktifkan Notifikasi',
                           icon: Icons.notifications_outlined,
                           isSecondary: true,
                           onPressed: () async {
@@ -129,11 +126,11 @@ class RouteAwarePermissionScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         TextButton(
                           onPressed: authController.markPermissionsSeen,
-                          child: const Text('Maybe later'),
+                          child: const Text('Nanti saja'),
                         ),
                         const SizedBox(height: 8),
                         PrimaryButton(
-                          label: 'Continue',
+                          label: 'Lanjut',
                           onPressed: authController.markPermissionsSeen,
                         ),
                       ],

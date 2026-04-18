@@ -4,6 +4,7 @@ import '../../../../core/utils/helpers.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../di/injection.dart';
 import '../../../../routes/route_names.dart';
+import '../../../../shared/widgets/brand/muslimku_logo.dart';
 import '../../../../shared/widgets/inputs/app_text_field.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_form.dart';
@@ -36,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final authController = AppDependenciesScope.of(context).authController;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Buat Akun')),
+      appBar: AppBar(title: const Text('Sign Up')),
       body: SafeArea(
         child: AnimatedBuilder(
           animation: authController,
@@ -49,6 +50,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    const MuslimkuBrand(
+                      logoSize: 38,
+                      textSize: 28,
+                    ),
+                    const SizedBox(height: 24),
                     const Text(
                       'Bergabung dengan Muslimku',
                       style: TextStyle(
@@ -109,7 +115,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         const SizedBox(height: 20),
                         AuthButton(
-                          label: 'Buat Akun',
+                          label: 'Sign Up',
                           loading: state.submitting,
                           onPressed: () async {
                             if (!_formKey.currentState!.validate()) return;
@@ -119,12 +125,15 @@ class _SignupScreenState extends State<SignupScreen> {
                               password: _passwordController.text,
                             );
                             if (!mounted) return;
-                            if (message != null) context.showAppSnack(message);
                             if (authController.state.requiresVerification) {
                               Navigator.of(context).pushReplacementNamed(
-                                RouteNames.otp,
+                                RouteNames.login,
+                                arguments: message ??
+                                    'Sign up berhasil. Cek email verifikasi lalu Sign In.',
                               );
+                              return;
                             }
+                            if (message != null) context.showAppSnack(message);
                           },
                         ),
                         const SizedBox(height: 12),
@@ -149,7 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextButton(
                       onPressed: () => Navigator.of(context)
                           .pushReplacementNamed(RouteNames.login),
-                      child: const Text('Sudah punya akun? Login'),
+                      child: const Text('Sudah punya akun? Sign In'),
                     ),
                   ],
                 ),

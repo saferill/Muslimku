@@ -52,7 +52,7 @@ class _AccountScreenState extends State<AccountScreen> {
           children: <Widget>[
             if (isGuest) ...<Widget>[
               const Text(
-                'Fitur akun penuh membutuhkan login.',
+                'Fitur akun penuh membutuhkan Sign In.',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -60,7 +60,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               const SizedBox(height: 12),
               PrimaryButton(
-                label: 'Ke Login',
+                label: 'Ke Sign In',
                 onPressed: () =>
                     Navigator.of(context).pushNamed(RouteNames.login),
               ),
@@ -80,7 +80,7 @@ class _AccountScreenState extends State<AccountScreen> {
             const Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(
-                'Jika email diubah, link verifikasi akan dikirim ke email baru. Sampai diverifikasi, email login lama tetap dipakai.',
+                'Jika email diubah, link verifikasi akan dikirim ke email baru. Sampai diverifikasi, email Sign In lama tetap dipakai.',
                 style: TextStyle(color: Colors.grey, height: 1.4),
               ),
             ),

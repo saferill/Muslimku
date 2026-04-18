@@ -31,7 +31,10 @@ class AppRoutes {
       case RouteNames.bootstrap:
         return _page(const AppBootstrapGate(), settings);
       case RouteNames.login:
-        return _page(const LoginScreen(), settings);
+        return _page(
+          LoginScreen(initialMessage: settings.arguments as String?),
+          settings,
+        );
       case RouteNames.signup:
         return _page(const SignupScreen(), settings);
       case RouteNames.otp:

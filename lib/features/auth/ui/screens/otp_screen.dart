@@ -42,7 +42,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'Ulangi login atau daftar untuk meminta link verifikasi email baru.',
+                      'Ulangi Sign In atau Sign Up untuk meminta link verifikasi email baru.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.textSecondary,
@@ -51,7 +51,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     PrimaryButton(
-                      label: 'Kembali ke Login',
+                      label: 'Kembali ke Sign In',
                       onPressed: () =>
                           Navigator.of(context).pushNamedAndRemoveUntil(
                         RouteNames.login,

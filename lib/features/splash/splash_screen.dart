@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/colors.dart';
+import '../../shared/widgets/brand/muslimku_logo.dart';
 import '../../shared/widgets/loaders/orb_loader.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -17,10 +19,22 @@ class SplashScreen extends StatelessWidget {
               top: -80,
               right: -80,
               child: Container(
-                width: 240,
-                height: 240,
+                width: 280,
+                height: 280,
                 decoration: BoxDecoration(
                   color: AppColors.tertiarySoft.withValues(alpha: 0.08),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              left: -100,
+              bottom: -120,
+              child: Container(
+                width: 320,
+                height: 320,
+                decoration: BoxDecoration(
+                  color: AppColors.primarySoft.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -32,34 +46,41 @@ class SplashScreen extends StatelessWidget {
                   children: <Widget>[
                     const Spacer(),
                     Container(
-                      width: 120,
-                      height: 120,
+                      width: 178,
+                      height: 178,
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.08),
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(48),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: 0.12),
                         ),
+                        boxShadow: const <BoxShadow>[
+                          BoxShadow(
+                            color: Color(0x22000000),
+                            blurRadius: 36,
+                            offset: Offset(0, 20),
+                          ),
+                        ],
                       ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        color: AppColors.primarySoft,
-                        size: 56,
+                      child: const MuslimkuLogo(
+                        size: 154,
+                        padding: 8,
+                        radius: 36,
+                        backgroundColor: Colors.white,
+                        borderColor: Colors.transparent,
                       ),
                     ),
                     const SizedBox(height: 28),
-                    const Text(
-                      'Muslimku',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 42,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -1.4,
-                      ),
+                    const MuslimkuBrand(
+                      center: true,
+                      logoSize: 42,
+                      textColor: Colors.white,
+                      textSize: 38,
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Digital sanctuary for prayer, Qur\'an, and reflection.',
+                      'Sahabat ibadah digital untuk adzan, Al-Qur\'an, dan perjalanan spiritual yang lebih terarah.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.72),
@@ -71,7 +92,7 @@ class SplashScreen extends StatelessWidget {
                     const OrbLoader(),
                     const SizedBox(height: 18),
                     Text(
-                      '14 Ramadan 1445 AH',
+                      '${AppConstants.appVersion} • 14 Ramadan 1445 AH',
                       style: TextStyle(
                         color: AppColors.primarySoft.withValues(alpha: 0.78),
                         fontSize: 11,

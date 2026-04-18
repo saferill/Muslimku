@@ -184,7 +184,7 @@ class _ForgotUsernameScreenState extends State<ForgotUsernameScreen> {
                                     onPressed: () => Navigator.of(context)
                                         .pushReplacementNamed(RouteNames.login),
                                     icon: const Icon(Icons.login_rounded),
-                                    label: const Text('Login'),
+                                    label: const Text('Sign In'),
                                   ),
                                 ),
                               ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../di/injection.dart';
+import '../../../shared/widgets/brand/muslimku_logo.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../widgets/onboarding_page.dart';
 
@@ -56,13 +57,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  const Text(
-                    'Muslimku',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.primary,
-                    ),
+                  const MuslimkuBrand(
+                    logoSize: 34,
+                    textSize: 24,
                   ),
                   TextButton(
                     onPressed: () {
@@ -110,7 +107,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               const SizedBox(height: 20),
               PrimaryButton(
-                label: _index == _pages.length - 1 ? 'Get Started' : 'Next',
+                label: _index == _pages.length - 1 ? 'Mulai' : 'Lanjut',
                 icon: Icons.arrow_forward,
                 onPressed: () {
                   if (_index == _pages.length - 1) {

@@ -4,12 +4,18 @@ import '../../../../core/utils/helpers.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../di/injection.dart';
 import '../../../../routes/route_names.dart';
+import '../../../../shared/widgets/brand/muslimku_logo.dart';
 import '../../../../shared/widgets/inputs/app_text_field.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_form.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    this.initialMessage,
+  });
+
+  final String? initialMessage;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,6 +25,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _messageShown = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_messageShown || (widget.initialMessage ?? '').isEmpty) return;
+    _messageShown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.showAppSnack(widget.initialMessage!);
+    });
+  }
 
   @override
   void dispose() {
@@ -33,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Sign In'),
       ),
       body: SafeArea(
         child: AnimatedBuilder(
@@ -48,6 +66,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(height: 8),
+                    const MuslimkuBrand(
+                      logoSize: 38,
+                      textSize: 28,
+                    ),
+                    const SizedBox(height: 24),
                     const Text(
                       'Selamat datang kembali',
                       style: TextStyle(
@@ -92,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 12),
                         AuthButton(
-                          label: 'Login',
+                          label: 'Sign In',
                           loading: state.submitting,
                           onPressed: () async {
                             if (!_formKey.currentState!.validate()) return;
@@ -143,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.of(context).pushReplacementNamed(
                               RouteNames.signup,
                             ),
-                            child: const Text('Belum punya akun? Daftar'),
+                            child: const Text('Belum punya akun? Sign Up'),
                           ),
                           TextButton(
                             onPressed: () =>

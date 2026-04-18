@@ -3,6 +3,7 @@
 import '../../../../core/constants/colors.dart';
 import '../../../../di/injection.dart';
 import '../../../../routes/route_names.dart';
+import '../../../../shared/widgets/brand/muslimku_logo.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
 
 class AuthDecisionScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class AuthDecisionScreen extends StatelessWidget {
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Login lagi'),
+                  child: const Text('Sign In lagi'),
                 ),
               ],
             );
@@ -56,27 +57,18 @@ class AuthDecisionScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               const Spacer(),
-              Container(
-                width: 108,
-                height: 108,
-                decoration: const BoxDecoration(
-                  gradient: AppColors.heroGradient,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.mosque_rounded,
-                  color: Colors.white,
-                  size: 52,
-                ),
+              const MuslimkuLogo(
+                size: 118,
+                padding: 8,
+                radius: 34,
+                backgroundColor: Colors.white,
               ),
               const SizedBox(height: 28),
-              const Text(
-                'Muslimku',
-                style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1.2,
-                ),
+              const MuslimkuBrand(
+                center: true,
+                logoSize: 40,
+                textColor: AppColors.textPrimary,
+                textSize: 38,
               ),
               const SizedBox(height: 14),
               const Text(
@@ -90,12 +82,12 @@ class AuthDecisionScreen extends StatelessWidget {
               ),
               const Spacer(),
               PrimaryButton(
-                label: 'Daftar',
+                label: 'Sign Up',
                 onPressed: () => Navigator.of(context).pushNamed(RouteNames.signup),
               ),
               const SizedBox(height: 14),
               PrimaryButton(
-                label: 'Login',
+                label: 'Sign In',
                 isSecondary: true,
                 onPressed: () => Navigator.of(context).pushNamed(RouteNames.login),
               ),

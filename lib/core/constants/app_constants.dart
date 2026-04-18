@@ -1,5 +1,6 @@
 class AppConstants {
   static const appName = 'Muslimku';
+  static const logoAssetPath = 'assets/Logo/Logo Muslimku.png';
   static const appVersion = '2.4.0';
   static const appBuild = 'Build 82';
   static const supportEmail = 'moch.syafrilramadhani@yahoo.com';

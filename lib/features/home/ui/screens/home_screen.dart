@@ -104,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                     if (state.isGuest) ...<Widget>[
                       const SizedBox(height: 16),
                       _GuestBanner(
-                        onLogin: () =>
+                        onSignIn: () =>
                             Navigator.of(context).pushNamed(RouteNames.login),
                       ),
                     ],
@@ -203,10 +203,10 @@ class HomeScreen extends StatelessWidget {
 
 class _GuestBanner extends StatelessWidget {
   const _GuestBanner({
-    required this.onLogin,
+    required this.onSignIn,
   });
 
-  final VoidCallback onLogin;
+  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
@@ -220,14 +220,14 @@ class _GuestBanner extends StatelessWidget {
         children: <Widget>[
           const Expanded(
             child: Text(
-              'Login atau daftar untuk sinkronisasi cloud, backup bookmark, dan akses multi-device.',
+              'Sign In atau Sign Up untuk sinkronisasi cloud, backup bookmark, dan akses multi-device.',
               style: TextStyle(height: 1.45),
             ),
           ),
           const SizedBox(width: 12),
           FilledButton(
-            onPressed: onLogin,
-            child: const Text('Login'),
+            onPressed: onSignIn,
+            child: const Text('Sign In'),
           ),
         ],
       ),

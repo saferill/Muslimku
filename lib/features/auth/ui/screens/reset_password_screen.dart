@@ -50,7 +50,7 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Kami sudah mengirim link reset password ke email Anda. Buka inbox atau folder spam, klik link tersebut, lalu login kembali dengan password baru.',
+                'Kami sudah mengirim link reset password ke email Anda. Buka inbox atau folder spam, klik link tersebut, lalu Sign In kembali dengan password baru.',
                 style: TextStyle(
                   height: 1.55,
                   fontSize: 16,
@@ -59,7 +59,7 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
               const Spacer(),
               PrimaryButton(
-                label: 'Kembali ke Login',
+                label: 'Kembali ke Sign In',
                 onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
                   RouteNames.login,
                   (_) => false,
